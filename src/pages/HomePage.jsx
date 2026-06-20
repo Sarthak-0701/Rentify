@@ -6,33 +6,6 @@ import Contact from './Contact';
 const HomePage = () => {
   return (
     <div className="min-h-screen bg-black text-gray-100 font-sans selection:bg-slate-800 selection:text-white">
-      {/* Navigation */}
-      {/* <nav className="border-b border-slate-900 bg-slate-950/50 backdrop-blur-md sticky top-0 z-50 px-20 py-4 flex items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <span className="text-3xl font-bold tracking-tight bg-linear-to-r from-blue-400 to-slate-200 bg-clip-text text-transparent">
-            Rentify.
-          </span>
-        </div>
-
-        <div className="flex gap-8 font-bold">
-            <Link to="/about" element={<About />}>
-              About
-            </Link>
-            <Link to="/contact" element={<Contact />}>
-              Contact Us
-            </Link>
-        </div>
-
-        <div className="flex items-center space-x-4">
-          <button className="text-sm font-medium text-gray-400 hover:text-white transition-colors px-4 py-2">
-            Login
-          </button>
-          <button className="text-sm font-medium bg-blue-600 hover:bg-blue-500 text-white transition-all shadow-lg shadow-blue-900/30 px-4 py-2 rounded-lg">
-            Get Started
-          </button>
-        </div>
-      </nav> */}
-
       {/* Hero Section */}
       <header className="relative max-w-7xl mx-auto px-6 pt-20 pb-16 text-center lg:pt-32">
         <div className="absolute inset-0 -z-10 mx-auto max-w-3xl h-75 bg-linear-to-r from-blue-900/20 to-slate-900/40 blur-[120px] rounded-full" />
