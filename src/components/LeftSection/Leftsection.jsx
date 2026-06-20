@@ -1,35 +1,42 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 
-const LeftSection = () => {
-
-  const activeTab = "Dashboard";
-
-  const menuItems = ["Dashboard", "Properties", "Tenants", "Calculator", "Payments", "Settings"];
+const Leftsection = () => {
+  const linkStyle = ({ isActive }) =>
+    `w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all font-medium text-sm ${
+      isActive
+        ? 'bg-blue-600/10 border border-blue-500/30 text-blue-400 shadow-md shadow-blue-950/20'
+        : 'text-gray-400 hover:bg-slate-900/50 hover:text-white border border-transparent'
+    }`;
 
   return (
-    <div className='h-full w-1/6 bg-linear-to-b from-slate-950 to-black border border-slate-900 rounded-2xl flex flex-col text-left gap-10 py-6 px-6 relative shadow-xl'>
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-px bg-linear-to-r from-transparent via-blue-500/20 to-transparent" />
+    <div className="w-70 sticky top-19 h-[calc(100vh-76px)] bg-slate-950/40 border-r border-slate-900/60 py-6 pl-10 flex flex-col justify-between shrink-0 overflow-y-auto custom-scrollbar">
       
+      <div className="space-y-2">
 
-      <div className='flex flex-col text-sm font-medium gap-2'>
-        {menuItems.map((item) => {
-          const isActive = activeTab === item;
-          return (
-            <div 
-              key={item}
-              className={`px-3 py-2.5 rounded-lg transition-all duration-200 cursor-pointer ${
-                isActive 
-                  ? "bg-blue-950/40 text-blue-400 border border-blue-900/40" 
-                  : "text-gray-400 hover:text-white hover:bg-slate-900/50"
-              }`}
-            >
-              {item}
-            </div>
-          );
-        })}
+        <NavLink to="/owner-dashboard" end className={linkStyle}>
+          <span>Dashboard Overview</span>
+        </NavLink>
+
+        <NavLink to="/owner-dashboard/properties" className={linkStyle}>
+          <span>Manage Properties</span>
+        </NavLink>
+
+        <NavLink to="/owner-dashboard/calculator" className={linkStyle}>
+          <span>Rent Calculator</span>
+        </NavLink>
+        
+        <NavLink to="/owner-dashboard/about" className={linkStyle}>
+          <span>About</span>
+        </NavLink>
+        
+        <NavLink to="/owner-dashboard/contact" className={linkStyle}>
+          <span>Help</span>
+        </NavLink>
       </div>
+
     </div>
   );
 };
 
-export default LeftSection;
+export default Leftsection;

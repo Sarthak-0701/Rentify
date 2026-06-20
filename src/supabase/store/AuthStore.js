@@ -4,7 +4,7 @@ import { supabase } from '../../supabaseClient';
 export const useAuthStore = create((set, get) => ({
   user: null,
   profile: null,
-  loading: false,
+  loading: true,
   error: null,
 
   // Fetch role metadata from public.profiles
@@ -74,23 +74,27 @@ export const useAuthStore = create((set, get) => ({
   },
 
   // Session recovery across browser refreshes
-  initializeAuth: async () => {
-    set({ loading: true });
-    
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session?.user) {
-      set({ user: session.user });
-      await get().fetchProfile(session.user.id);
+ initializeAuth: async () => {
+    set({ loading: true }); // Ensure it starts loading
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        set({ user: session.user });
+        await get().fetchProfile(session.user.id);
+      }
+    } catch (e) {
+      console.error("Session restoration error:", e);
+    } finally {
+      set({ loading: false }); // 👈 TURNS OFF LOADING REGARDLESS OF ACCESSIBILITY
     }
-    set({ loading: false });
 
-    // Live state listener subscription
     supabase.auth.onAuthStateChange(async (event, currentSession) => {
       if (currentSession?.user) {
         set({ user: currentSession.user });
         await get().fetchProfile(currentSession.user.id);
       } else {
-        set({ user: null, profile: null });
+        // If the user logs out, make sure loading is false
+        set({ user: null, profile: null, loading: false }); 
       }
     });
   },

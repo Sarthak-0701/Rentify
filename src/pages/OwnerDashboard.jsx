@@ -1,15 +1,10 @@
 import React from 'react'
-import LeftSection from '../components/LeftSection/Leftsection'
-import RightSection from '../components/RightSection/RightSection'
-import OwnerHeader from '../components/OwnerHeader'
+import RentManagement from '../components/RightSection/RentManagement'
 
 const OwnerDashboard = () => {
   return (
-    <div>
-      <div className='flex relative h-[90vh] bg-gray-900'>
-        <LeftSection />
-        <RightSection />
-      </div>
+    <div className='w-full py-7 h-[85vh] flex justify-center items-center'>
+        <RentManagement />
     </div>
   )
 }

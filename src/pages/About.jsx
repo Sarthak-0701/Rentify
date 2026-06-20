@@ -25,7 +25,7 @@ const About = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-black text-gray-100 font-sans selection:bg-slate-800 selection:text-white">
+    <div className="min-h-screen bg-black text-gray-100 font-sans selection:bg-slate-800 selection:text-white rounded-lg">
       {/* Hero Header */}
       <header className="relative max-w-7xl mx-auto px-6 pt-20 pb-12 text-center lg:pt-28">
         <div className="absolute inset-0 -z-10 mx-auto max-w-2xl h-62.5 bg-blue-900/10 blur-[100px] rounded-full" />

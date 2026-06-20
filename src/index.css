@@ -1,9 +1,37 @@
 @import "tailwindcss";
 
+body{
+  background-color: #000000;
+}
+
 button{
     cursor: pointer;
 }
 
 button:active{
     transform: scale(0.97);
+}
+
+/* Target the browser root window scrollbar globally */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000000; /* Blends perfectly into your black page body background */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e293b; /* slate-800 matches your dark aesthetics */
+  border-radius: 9999px;
+  border: 2px solid #000000; /* Creates an elegant gap spacing around the thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #334155; /* slate-700 on hover */
+}
+
+/* Optional: Smooth scroll behavior across page transitions */
+html {
+  scroll-behavior: smooth;
 }

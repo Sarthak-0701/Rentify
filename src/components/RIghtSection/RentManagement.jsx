@@ -61,7 +61,7 @@ const RentManagement = () => {
         ))}
       </div>
 
-      <div className='grow grid grid-cols-3 gap-3 w-full min-h-45'>
+      <div className='grid grid-cols-3 gap-3 w-full min-h-45'>
         <div className='bg-linear-to-b from-slate-950 to-black border border-slate-900 rounded-xl hover:border-slate-800 transition-colors'></div>
         <div className='bg-linear-to-b from-slate-950 to-black border border-slate-900 rounded-xl hover:border-slate-800 transition-colors'></div>
         <div className='bg-linear-to-b from-slate-950 to-black border border-slate-900 rounded-xl hover:border-slate-800 transition-colors'></div>
