@@ -83,7 +83,7 @@ const RentManagement = () => {
       subtext: `Active occupants`
     },
     { 
-      title: "Portfolio Occupancy", 
+      title: "Occupancy", 
       value: `${cappedOccupancy}%`, 
       icon: <Percent className="w-5 h-5 text-indigo-400" />,
       subtext: `${totalTenants} of ${totalRooms} rooms occupied`
@@ -163,7 +163,7 @@ const RentManagement = () => {
               key={idx} 
               className="p-5 bg-slate-950/40 border border-slate-900 rounded-2xl flex items-center justify-between shadow-xl relative overflow-hidden group hover:border-slate-800 transition-all"
             >
-              <div className="absolute top-0 left-0 right-0 h-[2px] bg-slate-900 group-hover:bg-blue-500/45 transition-colors" />
+              <div className="absolute top-0 left-0 right-0 h-0.5 bg-slate-900 group-hover:bg-blue-500/45 transition-colors" />
               
               <div className="space-y-1 select-none">
                 <h3 className="text-[10px] font-bold uppercase tracking-wider text-slate-400">{card.title}</h3>
@@ -191,7 +191,7 @@ const RentManagement = () => {
               {/* Colored Glassmorphic Overlay */}
               <div className={`absolute inset-0 pointer-events-none transition-all duration-300 ${card.overlayClass}`} />
 
-              <div className={`absolute top-0 left-0 right-0 h-[2px] ${card.lineClass} z-10`} />
+              <div className={`absolute top-0 left-0 right-0 h-0.5 ${card.lineClass} z-10`} />
               
               <div className="space-y-1 select-none z-10">
                 <h3 className="text-[10px] font-bold uppercase tracking-wider text-slate-400">{card.title}</h3>
@@ -209,15 +209,15 @@ const RentManagement = () => {
 
       {/* Property Breakdown Section */}
       <div className="p-6 bg-slate-950/40 border border-slate-900 rounded-2xl flex flex-col shadow-xl relative overflow-hidden">
-        <div className="absolute top-0 left-0 right-0 h-[2px] bg-slate-900" />
+        <div className="absolute top-0 left-0 right-0 h-0.5 bg-slate-900" />
         
         <div className="flex justify-between items-center mb-6">
           <div>
             <h3 className="text-md font-bold text-slate-200 flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-blue-400" /> Property Performance Analytics
+              <TrendingUp className="w-5 h-5 text-blue-400" /> Property Analytics
             </h3>
             <p className="text-[11px] text-slate-500 mt-0.5">
-              Breakdown of occupancy rates and detailed revenue metrics for each active property.
+              Breakdown of occupancy rates and detailed revenue metrics for each property.
             </p>
           </div>
         </div>
@@ -255,7 +255,7 @@ const RentManagement = () => {
                   key={prop.id}
                   className="p-5 bg-black/40 border border-slate-900 rounded-xl flex flex-col justify-between hover:border-slate-800 transition-all shadow-md group relative overflow-hidden"
                 >
-                  <div className="absolute top-0 left-0 right-0 h-[2px] bg-slate-900 group-hover:bg-blue-500/25 transition-colors" />
+                  <div className="absolute top-0 left-0 right-0 h-0.5 bg-slate-900 group-hover:bg-blue-500/25 transition-colors" />
 
                   {/* Header */}
                   <div>

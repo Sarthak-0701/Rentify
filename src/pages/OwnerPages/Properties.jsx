@@ -195,16 +195,28 @@ const Properties = () => {
       <div className="flex justify-between items-center pb-4 border-b border-slate-900/60">
         <div>
           <h1 className="text-2xl font-bold text-blue-400 tracking-tight flex items-center gap-2">
-            <Home className="w-6 h-6 text-blue-500" /> Real Estate Portfolio Tree
+            <Home className="w-6 h-6 text-blue-500" /> Your Properties
           </h1>
-          <p className="text-xs text-gray-500 mt-1">Manage and track your properties and their respective rooms</p>
+          <p className="text-xs text-slate-500 mt-1">Manage and track your properties and their respective rooms</p>
         </div>
         
         <button
-          onClick={() => openModal('addProp')}
-          className="flex items-center gap-1.5 px-4 py-2 text-xs font-semibold uppercase tracking-wider bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-all shadow-md shadow-blue-900/20 cursor-pointer"
+          onClick={() => {
+            if (properties.length >= 5) {
+              setError("You have reached the maximum limit of 5 properties.");
+              return;
+            }
+            openModal('addProp');
+          }}
+          disabled={properties.length >= 5}
+          className={`flex items-center gap-1.5 px-4 py-2 text-xs font-semibold uppercase tracking-wider rounded-lg transition-all shadow-md cursor-pointer ${
+            properties.length >= 5
+              ? 'bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed shadow-none'
+              : 'bg-blue-600 hover:bg-blue-500 text-white shadow-blue-900/20'
+          }`}
+          title={properties.length >= 5 ? "Maximum limit of 5 properties reached" : "Add Property"}
         >
-          <Plus className="w-4 h-4" /> Add Property
+          <Plus className="w-4 h-4" /> Add Property {properties.length > 0 && `(${properties.length}/5)`}
         </button>
       </div>
 

@@ -27,9 +27,21 @@ export const rentalService = {
     return data;
   },
 
-  // Add a new property
+  // Add a new property (maximum 5 properties allowed per owner)
   async addProperty(name) {
     const { data: { user } } = await supabase.auth.getUser();
+    
+    // Check current property count
+    const { data: currentProperties, error: countError } = await supabase
+      .from('properties')
+      .select('id')
+      .eq('owner_id', user.id);
+
+    if (countError) throw countError;
+    if (currentProperties && currentProperties.length >= 5) {
+      throw new Error("You have reached the maximum limit of 5 properties.");
+    }
+
     const { data, error } = await supabase
       .from('properties')
       .insert([{ name, owner_id: user.id }])

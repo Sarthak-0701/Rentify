@@ -30,22 +30,22 @@ const OwnerHeader = () => {
         </span>
       </div>
 
-      {/* User Actions */}
+    {/* user info - name & email */}
       <div className="flex items-center gap-4">
-        {/* User Details */}
+
         <div className="hidden md:flex flex-col text-right">
-          <span className="text-xs font-semibold text-slate-300 capitalize flex items-center gap-1.5 justify-end">
+          <span className="text-sm font-semibold text-slate-300 capitalize flex items-center gap-1.5 justify-end">
             <User className="w-3.5 h-3.5 text-blue-500" />
             {profile?.full_name || 'Owner'}
           </span>
-          <span className="text-[9px] text-slate-500 font-mono">{user?.email}</span>
+          <span className="text-[11px] text-slate-500 font-mono">{user?.email}</span>
         </div>
 
         {/* Sign Out Button */}
         <button
           id="btn-owner-logout"
           onClick={handleLogoutClick}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold border border-red-900/40 hover:border-red-900 bg-red-950/20 hover:bg-red-900/30 text-red-400 hover:text-red-300 rounded-lg transition-all cursor-pointer"
+          className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold border border-red-900/40 hover:border-red-900 bg-red-950/20 hover:bg-red-900/80 text-red-400 hover:text-red-300 rounded-lg transition-all cursor-pointer"
           title="Sign Out"
         >
           <LogOut className="w-3.5 h-3.5" />
