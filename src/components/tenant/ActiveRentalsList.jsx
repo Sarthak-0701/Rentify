@@ -26,7 +26,7 @@ const ActiveRentalsList = ({
           </p>
         </div>
       ) : (
-        <div className="space-y-3 max-h-[360px] overflow-y-auto pr-1">
+        <div className="space-y-3 max-h-90 overflow-y-auto pr-1">
           {rooms.map((room) => (
             <div
               key={room.id}
@@ -51,7 +51,7 @@ const ActiveRentalsList = ({
               </div>
 
               <div className="flex flex-col items-end gap-3">
-                <span className="text-[8px] bg-slate-900 text-slate-450 border border-slate-800 px-2 py-0.5 rounded font-mono">
+                <span className="text-[10px] bg-slate-900 text-slate-450 border border-slate-800 px-2 py-0.5 rounded font-mono">
                   Code: {room.tenant_code}
                 </span>
                 
