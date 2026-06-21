@@ -16,6 +16,8 @@ import Properties from './pages/OwnerPages/Properties'
 import Calculator from './pages/OwnerPages/Calculator'
 import OwnerLayout from './Layouts/OwnerLayout'
 import TenantLayout from './Layouts/TenantLayout'
+import ReceiptHistory from './pages/OwnerPages/ReceiptHistory'
+import TenantRentHistory from './pages/TenantPages/TenantRentHistory'
 
 const MainApp = () => {
   const initializeAuth = useAuthStore((state) => state.initializeAuth);
@@ -54,6 +56,7 @@ const MainApp = () => {
             { path: '', element: <OwnerDashboard /> },
             { path: 'properties', element: <Properties /> },
             { path: 'calculator', element: <Calculator /> },
+            { path: 'receipts/:propertyId/:roomId', element: <ReceiptHistory /> },
             { path: 'about' , element : <About />},
             { path: 'contact', element: <Contact />}
               ]
@@ -66,9 +69,13 @@ const MainApp = () => {
       element: <ProtectedRoute allowedRoles={['Tenant']} />,
       children: [
         {
+          path: '/tenant-dashboard',
           element: <TenantLayout />, 
           children: [
-            { path: '/tenant-dashboard', element: <TenantDashboard /> }
+            { path: '', element: <TenantDashboard /> },
+            { path: 'rent-history', element: <TenantRentHistory /> },
+            { path: 'about', element: <About /> },
+            { path: 'contact', element: <Contact /> }
           ]
         }
       ]
