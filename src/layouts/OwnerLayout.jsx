@@ -1,8 +1,8 @@
 import React from 'react'
 import Footer from '../components/Footer'
 import { Outlet } from 'react-router-dom'
-import OwnerHeader from '../components/OwnerHeader'
-import Leftsection from '../components/LeftSection/Leftsection'
+import OwnerHeader from '../components/header/OwnerHeader'
+import Leftsection from '../components/sidebar/OwnerSidebar'
 import { useAuthStore } from '../supabase/store/AuthStore'
 
 const OwnerLayout = () => {

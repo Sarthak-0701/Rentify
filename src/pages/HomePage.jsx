@@ -1,12 +1,15 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import About from './About';
 import Contact from './Contact';
 
 const HomePage = () => {
+
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-black text-gray-100 font-sans selection:bg-slate-800 selection:text-white">
-      {/* Hero Section */}
+
       <header className="relative max-w-7xl mx-auto px-6 pt-20 pb-16 text-center lg:pt-32">
         <div className="absolute inset-0 -z-10 mx-auto max-w-3xl h-75 bg-linear-to-r from-blue-900/20 to-slate-900/40 blur-[120px] rounded-full" />
         
@@ -22,20 +25,22 @@ const HomePage = () => {
         </p>
 
         <div className="mt-10 flex flex-wrap justify-center gap-4">
-          <button className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-lg transition-all shadow-lg shadow-blue-900/40">
+          <button 
+          onClick={() => navigate('/login')}
+          className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-lg transition-all shadow-lg shadow-blue-900/40">
             Explore Owner Dashboard
           </button>
-          <button className="px-6 py-3 bg-slate-900 border border-slate-800 hover:bg-slate-800 text-gray-200 font-medium rounded-lg transition-all">
+          <button onClick={() => navigate('/login')} className="px-6 py-3 bg-slate-900 border border-slate-800 hover:bg-slate-800 text-gray-200 font-medium rounded-lg transition-all">
             Access Tenant Portal
           </button>
         </div>
       </header>
 
-      {/* Split Dashboard Portals Section */}
+
       <main className="max-w-7xl mx-auto px-6 py-16">
         <div className="grid md:grid-cols-2 gap-8">
           
-          {/* Owner Box */}
+
           <div className="bg-linear-to-b from-slate-950 to-black border border-slate-900 rounded-2xl p-8 hover:border-blue-900/50 transition-all group shadow-xl">
             <div className="w-12 h-12 rounded-xl bg-blue-950/80 border border-blue-900/50 flex items-center justify-center mb-6 text-blue-400 group-hover:scale-110 transition-transform">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -57,12 +62,12 @@ const HomePage = () => {
                 <span className="text-blue-500">✓</span> Real-time status of pending and completed payments
               </li>
             </ul>
-            <button className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-sm font-medium border border-slate-800 rounded-lg text-white transition-colors">
-              Enter Owner Suite
+            <button className="w-full py-2.5 bg-green-700 hover:bg-green-600 text-sm font-medium border border-slate-800 rounded-lg text-white transition-colors">
+              Manage Your Properties
             </button>
           </div>
 
-          {/* Tenant Box */}
+
           <div className="bg-linear-to-b from-slate-950 to-black border border-slate-900 rounded-2xl p-8 hover:border-slate-800 transition-all group shadow-xl">
             <div className="w-12 h-12 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center mb-6 text-gray-400 group-hover:scale-110 transition-transform">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -84,7 +89,7 @@ const HomePage = () => {
                 <span className="text-slate-500">✓</span> Complete downloadable historical receipt records
               </li>
             </ul>
-            <button className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-sm font-medium border border-slate-800 rounded-lg text-white transition-colors">
+            <button className="w-full py-2.5 bg-green-700 hover:bg-green-600 text-sm font-medium border border-slate-800 rounded-lg text-white transition-colors">
               View Your Receipts
             </button>
           </div>
@@ -92,10 +97,6 @@ const HomePage = () => {
         </div>
       </main>
 
-      {/* Footer */}
-      {/* <footer className="border-t border-slate-950 mt-20 bg-black py-8 px-6 text-center text-xs text-gray-600">
-        <p>© {new Date().getFullYear()} Rentify Project. Built with clean analytics and streamlined workflows.</p>
-      </footer> */}
     </div>
   );
 };

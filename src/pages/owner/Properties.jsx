@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../supabase/store/AuthStore';
 import { rentalService } from '../../supabase/services/rentalServices';
-import { supabase } from '../../supabaseClient';
+import { supabase } from '../../supabase/client';
 import { 
   Plus, 
   Edit, 

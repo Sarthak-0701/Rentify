@@ -1,5 +1,5 @@
 import React from 'react'
-import RentCalculator from '../../components/RightSection/RentCalculator'
+import RentCalculator from '../../components/dashboard/RentCalculator'
 
 const Calculator = () => {
   return (

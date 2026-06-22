@@ -1,14 +1,13 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
     <footer className="bg-black border-t border-slate-900 text-gray-400 font-sans">
       <div className="max-w-7xl mx-auto px-6 py-12 md:py-16">
-        
-        {/* Top Section: Brand + Links + Newsletter */}
+
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-slate-950">
-          
-          {/* Brand Column */}
+
           <div className="md:col-span-1 space-y-4">
             <span className="text-2xl font-bold tracking-tight bg-linear-to-r from-blue-400 to-slate-200 bg-clip-text text-transparent">
               Rentify.
@@ -18,29 +17,26 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* Quick Nav Links */}
           <div className="space-y-3">
             <h4 className="text-sm font-semibold uppercase tracking-wider text-white">Platform</h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="#" className="hover:text-blue-400 transition-colors">Home</a></li>
-              <li><a href="#" className="hover:text-blue-400 transition-colors">About Us</a></li>
-              <li><a href="#" className="hover:text-blue-400 transition-colors">Owner Dashboard</a></li>
-              <li><a href="#" className="hover:text-blue-400 transition-colors">Tenant Portal</a></li>
+              <li><Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="hover:text-blue-400 transition-colors">Home</Link></li>
+              <li><Link to="/About" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="hover:text-blue-400 transition-colors">About Us</Link></li>
+              <li><Link to="/owner-dashboard" className="hover:text-blue-400 transition-colors">Owner Dashboard</Link></li>
+              <li><Link to="/tenant-dashboard" className="hover:text-blue-400 transition-colors">Tenant Portal</Link></li>
             </ul>
           </div>
 
-          {/* Support & Legal */}
           <div className="space-y-3">
             <h4 className="text-sm font-semibold uppercase tracking-wider text-white">Support & Legal</h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="#" className="hover:text-blue-400 transition-colors">Contact Support</a></li>
-              <li><a href="#" className="hover:text-blue-400 transition-colors">Terms of Service</a></li>
-              <li><a href="#" className="hover:text-blue-400 transition-colors">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-blue-400 transition-colors">Tax & Compliance</a></li>
+              <li><Link to="/contact" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="hover:text-blue-400 transition-colors">Contact Support</Link></li>
+              <li><Link to="/terms" className="hover:text-blue-400 transition-colors">Terms of Service</Link></li>
+              <li><Link to="/privacy" className="hover:text-blue-400 transition-colors">Privacy Policy</Link></li>
+              <li><Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="hover:text-blue-400 transition-colors">Tax & Compliance</Link></li>
             </ul>
           </div>
 
-          {/* Stay Updated Component */}
           <div className="space-y-3">
             <h4 className="text-sm font-semibold uppercase tracking-wider text-white">Stay Updated</h4>
             <p className="text-xs text-gray-500">Subscribe for platform tax-guidelines and update alerts.</p>
@@ -58,10 +54,8 @@ const Footer = () => {
 
         </div>
 
-        {/* Bottom Section: Developer Credit, Copyright & Socials */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
           
-          {/* Copyright details */}
           <div className="text-center sm:text-left space-y-1">
             <p>© {new Date().getFullYear()} Rentify. All rights reserved.</p>
             <p className="text-gray-600">
@@ -69,9 +63,8 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* Social Handles */}
           <div className="flex items-center space-x-5">
-            {/* GitHub */}
+            
             <a 
               href="https://github.com" 
               target="_blank" 

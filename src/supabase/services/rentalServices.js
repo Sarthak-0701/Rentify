@@ -1,4 +1,4 @@
-import { supabase } from '../../supabaseClient';
+import { supabase } from '../client';
 
 export const rentalService = {
   // Fetch properties and their nested rooms for a specific owner

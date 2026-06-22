@@ -2,22 +2,23 @@ import { StrictMode, useEffect } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import { RouterProvider , createBrowserRouter } from 'react-router-dom'
-import BasicLayout from './Layouts/BasicLayout'
+import BasicLayout from './layouts/BasicLayout'
 import HomePage from './pages/HomePage'
 import About from './pages/About'
 import Contact from './pages/Contact'
 import Login from './pages/Login'
 import Register from './pages/Register'
-import OwnerDashboard from './pages/OwnerDashboard'
-import TenantDashboard from './pages/TenantDashboard'
-import ProtectedRoute from './components/ProtectedRoute'
+import OwnerDashboard from './pages/owner/OwnerDashboard'
+import TenantDashboard from './pages/tenant/TenantDashboard'
+import ProtectedRoute from './components/auth/ProtectedRoute'
 import { useAuthStore } from './supabase/store/AuthStore'
-import Properties from './pages/OwnerPages/Properties'
-import Calculator from './pages/OwnerPages/Calculator'
-import OwnerLayout from './Layouts/OwnerLayout'
-import TenantLayout from './Layouts/TenantLayout'
-import ReceiptHistory from './pages/OwnerPages/ReceiptHistory'
-import TenantRentHistory from './pages/TenantPages/TenantRentHistory'
+import Properties from './pages/owner/Properties'
+import Calculator from './pages/owner/Calculator'
+import OwnerLayout from './layouts/OwnerLayout'
+import TenantLayout from './layouts/TenantLayout'
+import ReceiptHistory from './pages/owner/ReceiptHistory'
+import TenantRentHistory from './pages/tenant/TenantRentHistory'
+import { PrivacyPolicy, TermsAndServices } from './pages/LegalDox'
 
 const MainApp = () => {
   const initializeAuth = useAuthStore((state) => state.initializeAuth);
@@ -33,7 +34,9 @@ const MainApp = () => {
       children: [
         { path: '', element: <HomePage /> },
         { path: 'about', element: <About /> },
-        { path: 'contact', element: <Contact /> }
+        { path: 'contact', element: <Contact /> },
+        { path: 'terms' , element: <TermsAndServices />},
+        { path: 'privacy' , element: <PrivacyPolicy/> }
       ]
     },
     { 

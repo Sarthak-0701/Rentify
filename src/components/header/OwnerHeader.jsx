@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../supabase/store/AuthStore';
+import { useAuthStore } from '../../supabase/store/AuthStore';
 import { LogOut, User } from 'lucide-react';
 
 const OwnerHeader = () => {

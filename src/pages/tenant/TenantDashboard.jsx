@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useAuthStore } from '../supabase/store/AuthStore';
-import { rentalService } from '../supabase/services/rentalServices';
-import LinkRentalRoom from '../components/tenant/LinkRentalRoom';
-import ActiveRentalsList from '../components/tenant/ActiveRentalsList';
-import OutstandingBillsList from '../components/tenant/OutstandingBillsList';
-import StatementDetailsModal from '../components/tenant/StatementDetailsModal';
+import { useAuthStore } from '../../supabase/store/AuthStore';
+import { rentalService } from '../../supabase/services/rentalServices';
+import LinkRentalRoom from '../../components/tenant/LinkRentalRoom';
+import ActiveRentalsList from '../../components/tenant/ActiveRentalsList';
+import OutstandingBillsList from '../../components/tenant/OutstandingBillsList';
+import StatementDetailsModal from '../../components/tenant/StatementDetailsModal';
 import { 
   Home, 
   User, 

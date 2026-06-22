@@ -1,7 +1,7 @@
 import React from 'react'
-import Leftsection from './components/LeftSection/Leftsection'
-import RightSection from './components/RightSection/RightSection'
-import Header from './components/Header'
+import Leftsection from './components/sidebar/OwnerSidebar'
+import RightSection from './components/dashboard/RightSection'
+import Header from './components/header/Header'
 
 const App = () => {
   return (

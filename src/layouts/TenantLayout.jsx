@@ -1,8 +1,8 @@
 import React from 'react';
 import Footer from '../components/Footer';
 import { Outlet } from 'react-router-dom';
-import TenantHeader from '../components/TenantHeader';
-import TenantLeftSection from '../components/LeftSection/TenantLeftSection';
+import TenantHeader from '../components/header/TenantHeader';
+import TenantLeftSection from '../components/sidebar/TenantSidebar';
 import { useAuthStore } from '../supabase/store/AuthStore';
 
 const TenantLayout = () => {

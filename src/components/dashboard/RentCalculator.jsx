@@ -126,7 +126,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { User, Home, Calendar, Zap, Droplets, Trash2, Wallet, Banknote, Download, Share2 } from 'lucide-react';
 import html2canvas from 'html2canvas';
-import { supabase } from '../../supabaseClient';
+import { supabase } from '../../supabase/client';
 import { useAuthStore } from '../../supabase/store/AuthStore';
 
 const RentCalculator = () => {

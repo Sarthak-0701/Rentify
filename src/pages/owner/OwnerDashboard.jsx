@@ -1,5 +1,5 @@
 import React from 'react'
-import RentManagement from '../components/RightSection/RentManagement'
+import RentManagement from '../../components/dashboard/RentManagement'
 
 const OwnerDashboard = () => {
   return (
