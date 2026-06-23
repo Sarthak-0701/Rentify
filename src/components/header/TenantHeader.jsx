@@ -1,9 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../supabase/store/AuthStore';
-import { LogOut, User } from 'lucide-react';
+import { LogOut, User, Menu } from 'lucide-react';
 
-const TenantHeader = () => {
+const TenantHeader = ({ onToggleSidebar }) => {
   const logout = useAuthStore((state) => state.logout);
   const profile = useAuthStore((state) => state.profile);
   const user = useAuthStore((state) => state.user);
@@ -19,15 +19,26 @@ const TenantHeader = () => {
   };
 
   return (
-    <nav className="border-b border-slate-900 bg-slate-950 backdrop-blur-md sticky top-0 z-50 px-10 md:px-20 py-6 flex items-center justify-between">
-      {/* Brand Logo */}
-      <div className="flex items-center space-x-2 cursor-pointer" onClick={() => navigate('/tenant-dashboard')}>
-        <span className="text-2xl font-bold tracking-tight bg-linear-to-r from-emerald-400 to-slate-200 bg-clip-text text-transparent">
-          Rentify.
-        </span>
-        <span className="text-[10px] uppercase font-bold tracking-wider text-emerald-500 bg-emerald-950/40 border border-emerald-900/30 px-2 py-0.5 rounded-full hidden sm:inline-block">
-          Tenant Portal
-        </span>
+    <nav className="border-b border-slate-900 bg-slate-950 backdrop-blur-md sticky top-0 z-50 px-6 md:px-20 py-5 md:py-6 flex items-center justify-between">
+      {/* Brand Logo & Burger Toggle */}
+      <div className="flex items-center space-x-4">
+        {/* Burger Button (visible only on screens < lg) */}
+        <button
+          onClick={onToggleSidebar}
+          className="lg:hidden text-slate-400 hover:text-white transition-colors cursor-pointer focus:outline-none"
+          title="Toggle Navigation Menu"
+        >
+          <Menu className="w-6 h-6" />
+        </button>
+
+        <div className="flex items-center space-x-2 cursor-pointer" onClick={() => navigate('/tenant-dashboard')}>
+          <span className="text-xl md:text-2xl font-bold tracking-tight bg-linear-to-r from-emerald-400 to-slate-200 bg-clip-text text-transparent">
+            Rentify.
+          </span>
+          <span className="text-[9px] sm:text-[10px] uppercase font-bold tracking-wider text-emerald-500 bg-emerald-950/40 border border-emerald-900/30 px-2 py-0.5 rounded-full hidden sm:inline-block">
+            Tenant Portal
+          </span>
+        </div>
       </div>
 
       {/* User Actions */}

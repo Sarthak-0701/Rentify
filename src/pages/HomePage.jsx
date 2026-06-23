@@ -62,7 +62,7 @@ const HomePage = () => {
                 <span className="text-blue-500">✓</span> Real-time status of pending and completed payments
               </li>
             </ul>
-            <button className="w-full py-2.5 bg-green-700 hover:bg-green-600 text-sm font-medium border border-slate-800 rounded-lg text-white transition-colors">
+            <button onClick={() => navigate('/login')} className="w-full py-2.5 bg-green-700 hover:bg-green-600 text-sm font-medium border border-slate-800 rounded-lg text-white transition-colors">
               Manage Your Properties
             </button>
           </div>
@@ -89,7 +89,7 @@ const HomePage = () => {
                 <span className="text-slate-500">✓</span> Complete downloadable historical receipt records
               </li>
             </ul>
-            <button className="w-full py-2.5 bg-green-700 hover:bg-green-600 text-sm font-medium border border-slate-800 rounded-lg text-white transition-colors">
+            <button onClick={() => navigate('/login')} className="w-full py-2.5 bg-green-700 hover:bg-green-600 text-sm font-medium border border-slate-800 rounded-lg text-white transition-colors">
               View Your Receipts
             </button>
           </div>

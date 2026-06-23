@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../supabase/store/AuthStore';
+import { Eye, EyeOff } from 'lucide-react';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ const Register = () => {
     password: '',
     role: 'Tenant'
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [localError, setLocalError] = useState(null);
 
   const handleChange = (e) => {
@@ -107,16 +109,30 @@ const Register = () => {
 
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Password</label>
-              <input
-                type="password"
-                name="password"
-                required
-                disabled={loading}
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="••••••••"
-                className="w-full bg-slate-950 border border-slate-900 focus:border-blue-500 rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-700 outline-none transition-colors disabled:opacity-50"
-              />
+              <div className="relative w-full">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  required
+                  disabled={loading}
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="••••••••"
+                  className="w-full bg-slate-950 border border-slate-900 focus:border-blue-500 rounded-lg pl-4 pr-12 py-2.5 text-sm text-white placeholder-gray-700 outline-none transition-colors disabled:opacity-50"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 flex items-center pr-4 text-white hover:text-slate-200 cursor-pointer focus:outline-none"
+                  title={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
             </div>
 
             <div>
