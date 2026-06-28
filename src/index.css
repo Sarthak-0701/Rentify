@@ -1,7 +1,12 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+}
+
 body{
   background-color: #000000;
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
 }
 
 button{
@@ -34,4 +39,112 @@ button:active{
 /* Optional: Smooth scroll behavior across page transitions */
 html {
   scroll-behavior: smooth;
+}
+
+/* Infinite Staggered Word Flow Animation */
+@keyframes word-flow {
+  0%, 100% {
+    font-weight: 200;
+  }
+  50% {
+    font-weight: 800;
+  }
+}
+
+.flow-char {
+  display: inline-block;
+  font-weight: 200;
+  animation: word-flow 2s infinite ease-in-out;
+  margin-right: 0.02em; /* subtle spacing to prevent letter overlap */
+  background-image: linear-gradient(135deg, #60a5fa 0%, #94a3b8 50%, #e5e7eb 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  will-change: font-weight;
+}
+
+/* Premium Scroll Reveal System */
+.reveal-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+.reveal-up.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+.reveal-left.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+.reveal-right.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+.reveal-scale.revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Animated Revolving Border Container */
+.revolving-border-box {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem; /* rounded-2xl */
+  padding: 1.5px; /* border thickness */
+  background: rgba(30, 41, 59, 0.4);
+}
+
+.revolving-border-box::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 30%,
+    #3b82f6 50%,     /* blue revolving light */
+    transparent 70%
+  );
+  animation: rotate-border 3.5s linear infinite;
+  z-index: 1;
+}
+
+@keyframes rotate-border {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.revolving-border-content {
+  position: relative;
+  z-index: 2;
+  border-radius: calc(1rem - 1.5px);
+  width: 100%;
+  height: 100%;
 }
