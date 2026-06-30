@@ -190,14 +190,14 @@ const Properties = () => {
   };
 
   return (
-    <div className="space-y-6 text-white font-sans relative min-h-[77vh]">
+    <div className="space-y-6 text-app-text-primary font-sans relative min-h-[77vh] transition-colors">
       {/* Header Row */}
-      <div className="flex justify-between items-center pb-4 border-b border-slate-900/60">
+      <div className="flex justify-between items-center pb-4 border-b border-app-card-border">
         <div>
-          <h1 className="text-2xl font-bold text-blue-400 tracking-tight flex items-center gap-2">
-            <Home className="w-6 h-6 text-blue-500" /> Your Properties
+          <h1 className="text-2xl font-bold text-app-accent tracking-tight flex items-center gap-2">
+            <Home className="w-6 h-6 text-app-accent" /> Your Properties
           </h1>
-          <p className="text-xs text-slate-500 mt-1">Manage and track your properties and their respective rooms</p>
+          <p className="text-xs text-app-text-muted mt-1">Manage and track your properties and their respective rooms</p>
         </div>
         
         <button
@@ -211,8 +211,8 @@ const Properties = () => {
           disabled={properties.length >= 5}
           className={`flex items-center gap-1.5 px-4 py-2 text-xs font-semibold uppercase tracking-wider rounded-lg transition-all shadow-md cursor-pointer ${
             properties.length >= 5
-              ? 'bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed shadow-none'
-              : 'bg-blue-600 hover:bg-blue-500 text-white shadow-blue-900/20'
+              ? 'bg-app-card-to text-app-text-muted border border-app-card-border cursor-not-allowed shadow-none'
+              : 'bg-app-accent hover:bg-app-accent-hover text-white'
           }`}
           title={properties.length >= 5 ? "Maximum limit of 5 properties reached" : "Add Property"}
         >
@@ -222,9 +222,9 @@ const Properties = () => {
 
       {/* Error Alert */}
       {error && (
-        <div className="p-4 bg-red-950/30 border border-red-900/40 rounded-xl flex items-center justify-between">
-          <p className="text-sm text-red-400">{error}</p>
-          <button onClick={() => setError(null)} className="text-red-400 hover:text-red-300">
+        <div className="p-4 bg-app-danger-glow border border-app-danger-border rounded-xl flex items-center justify-between">
+          <p className="text-sm text-app-danger">{error}</p>
+          <button onClick={() => setError(null)} className="text-app-danger hover:text-app-danger/80">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -233,16 +233,16 @@ const Properties = () => {
       {/* Main Grid View */}
       {loading ? (
         <div className="flex justify-center items-center py-12">
-          <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+          <Loader2 className="w-8 h-8 text-app-accent animate-spin" />
         </div>
       ) : properties.length === 0 ? (
-        <div className="text-center py-16 border border-dashed border-slate-900 rounded-2xl bg-slate-950/20">
-          <Building className="w-12 h-12 text-slate-700 mx-auto mb-3" />
-          <p className="text-slate-400 font-medium">No properties listed yet.</p>
-          <p className="text-xs text-slate-600 mt-1 mb-4">Create your first property to start organizing rooms.</p>
+        <div className="text-center py-16 border border-dashed border-app-card-border rounded-2xl bg-app-card-from">
+          <Building className="w-12 h-12 text-app-text-muted mx-auto mb-3" />
+          <p className="text-app-text-primary font-medium">No properties listed yet.</p>
+          <p className="text-xs text-app-text-muted mt-1 mb-4">Create your first property to start organizing rooms.</p>
           <button
             onClick={() => openModal('addProp')}
-            className="px-4 py-2 text-xs font-semibold bg-slate-900 border border-slate-800 hover:bg-slate-800 rounded-lg cursor-pointer transition-colors"
+            className="px-4 py-2 text-xs font-semibold bg-app-card-to border border-app-card-border hover:bg-app-card-hover/20 text-app-text-primary rounded-lg cursor-pointer transition-colors"
           >
             Add Property
           </button>
@@ -252,13 +252,13 @@ const Properties = () => {
           {properties.map((property) => (
             <div 
               key={property.id} 
-              className="p-6 bg-slate-950/40 border border-slate-900 rounded-2xl shadow-xl flex flex-col justify-between group hover:border-slate-800 transition-all relative overflow-hidden"
+              className="p-6 bg-linear-to-b from-app-card-from to-app-card-to border border-app-card-border rounded-2xl shadow-xl flex flex-col justify-between group hover:border-app-card-hover transition-colors relative overflow-hidden"
             >
               {/* Card Header */}
               <div>
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg font-bold text-slate-200 font-sans flex items-center gap-2">
-                    <Building className="w-5 h-5 text-blue-400/80" />
+                  <h3 className="text-lg font-bold text-app-text-primary font-sans flex items-center gap-2">
+                    <Building className="w-5 h-5 text-app-accent/80" />
                     {property.name}
                   </h3>
                   
@@ -267,14 +267,14 @@ const Properties = () => {
                     <button
                       onClick={() => openModal('editProp', property)}
                       title="Edit Property"
-                      className="p-1.5 hover:bg-slate-900 text-slate-400 hover:text-blue-400 rounded-lg transition-colors cursor-pointer"
+                      className="p-1.5 hover:bg-app-card-hover/20 text-app-text-secondary hover:text-app-accent rounded-lg transition-colors cursor-pointer"
                     >
                       <Edit className="w-3.5 h-3.5" />
                     </button>
                     <button
                       onClick={() => setDeleteConfirm({ type: 'property', id: property.id, title: property.name })}
                       title="Delete Property"
-                      className="p-1.5 hover:bg-slate-900 text-slate-400 hover:text-red-400 rounded-lg transition-colors cursor-pointer"
+                      className="p-1.5 hover:bg-app-card-hover/20 text-app-text-secondary hover:text-app-danger rounded-lg transition-colors cursor-pointer"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -282,25 +282,25 @@ const Properties = () => {
                 </div>
 
                 {/* Rooms Checklist */}
-                <div className="space-y-2 border-l-2 border-slate-900 pl-4">
+                <div className="space-y-2 border-l-2 border-app-card-border pl-4">
                   {property.rooms && property.rooms.length > 0 ? (
                     property.rooms.map((room) => (
                       <div 
                         key={room.id}
                         onClick={() => navigate(`/owner-dashboard/receipts/${property.id}/${room.id}`)}
-                        className="group/room flex justify-between items-center p-3 bg-black/40 border border-slate-900/60 rounded-xl hover:border-slate-800/80 hover:bg-slate-900/40 transition-colors cursor-pointer"
+                        className="group/room flex justify-between items-center p-3 bg-app-card-from border border-app-card-border rounded-xl hover:border-app-card-hover hover:bg-app-card-hover/10 transition-colors cursor-pointer"
                       >
                         <div className="flex flex-col">
-                          <span className="text-sm font-semibold text-gray-300 flex items-center gap-1.5">
-                            <Bed className="w-3.5 h-3.5 text-blue-500/60" /> Room {room.room_number}
+                          <span className="text-sm font-semibold text-app-text-primary flex items-center gap-1.5">
+                            <Bed className="w-3.5 h-3.5 text-app-accent/60" /> Room {room.room_number}
                           </span>
                           {room.tenant_name && (
                             <div className="flex items-center gap-2 mt-0.5 pl-5">
-                              <span className="text-[11px] text-gray-500 flex items-center gap-1">
+                              <span className="text-[11px] text-app-text-muted flex items-center gap-1">
                                 <User className="w-2.5 h-2.5" /> {room.tenant_name}
                               </span>
                               {room.tenant_code && (
-                                <span className="text-[9px] bg-slate-900 text-slate-400 px-1.5 py-0.5 rounded font-mono border border-slate-800">
+                                <span className="text-[9px] bg-app-card-to text-app-text-secondary px-1.5 py-0.5 rounded font-mono border border-app-card-border">
                                   ID: {room.tenant_code}
                                 </span>
                               )}
@@ -309,7 +309,7 @@ const Properties = () => {
                         </div>
 
                         <div className="flex items-center gap-3">
-                          <span className="text-[11px] font-semibold bg-blue-950/40 text-blue-400 px-2.5 py-1 rounded-full border border-blue-900/30 flex items-center">
+                          <span className="text-[11px] font-semibold bg-app-accent-glow text-app-accent px-2.5 py-1 rounded-full border border-app-accent-border flex items-center">
                             ₹{Number(room.base_rent).toLocaleString('en-IN')}
                           </span>
 
@@ -317,21 +317,21 @@ const Properties = () => {
                           <div className="flex items-center opacity-0 group-hover/room:opacity-100 transition-opacity">
                             <button
                               onClick={(e) => {
-                                e.stopPropagation();
-                                openModal('editRoom', room);
+                                  e.stopPropagation();
+                                  openModal('editRoom', room);
                               }}
                               title="Edit Room"
-                              className="p-1 hover:bg-slate-900 text-slate-400 hover:text-blue-400 rounded-md cursor-pointer transition-colors"
+                              className="p-1 hover:bg-app-card-hover/20 text-app-text-secondary hover:text-app-accent rounded-md cursor-pointer transition-colors"
                             >
                               <Edit className="w-3.5 h-3.5" />
                             </button>
                             <button
                               onClick={(e) => {
-                                e.stopPropagation();
-                                setDeleteConfirm({ type: 'room', id: room.id, title: `Room ${room.room_number}` });
+                                  e.stopPropagation();
+                                  setDeleteConfirm({ type: 'room', id: room.id, title: `Room ${room.room_number}` });
                               }}
                               title="Delete Room"
-                              className="p-1 hover:bg-slate-900 text-slate-400 hover:text-red-400 rounded-md cursor-pointer transition-colors"
+                              className="p-1 hover:bg-app-card-hover/20 text-app-text-secondary hover:text-app-danger rounded-md cursor-pointer transition-colors"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
                             </button>
@@ -340,21 +340,21 @@ const Properties = () => {
                       </div>
                     ))
                   ) : (
-                    <p className="text-xs text-slate-600 italic py-2 pl-2">No rooms added to this property.</p>
+                    <p className="text-xs text-app-text-muted italic py-2 pl-2">No rooms added to this property.</p>
                   )}
                 </div>
               </div>
 
               {/* Add Room Button in Property Card */}
-              <div className="mt-4 pt-4 border-t border-slate-900/60 flex justify-end">
+              <div className="mt-4 pt-4 border-t border-app-card-border flex justify-end">
                 {property.rooms && property.rooms.length >= 12 ? (
-                  <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider">
+                  <span className="text-[11px] font-bold text-app-text-muted uppercase tracking-wider">
                     Max 12 Rooms Reached
                   </span>
                 ) : (
                   <button
                     onClick={() => openModal('addRoom', property)}
-                    className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-slate-400 hover:text-blue-400 transition-colors cursor-pointer"
+                    className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-app-text-secondary hover:text-app-accent transition-colors cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" /> Add Room
                   </button>
@@ -370,25 +370,25 @@ const Properties = () => {
       {/* 1. Add/Edit Property Modal */}
       {(activeModal === 'addProp' || activeModal === 'editProp') && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="relative w-full max-w-md bg-slate-950 border border-slate-900 rounded-2xl p-6 shadow-2xl animate-in fade-in duration-200">
+          <div className="relative w-full max-w-md bg-app-bg border border-app-border rounded-2xl p-6 shadow-2xl animate-in fade-in duration-200">
             <button
               onClick={() => setActiveModal(null)}
-              className="absolute top-4 right-4 text-slate-500 hover:text-slate-300 transition-colors cursor-pointer"
+              className="absolute top-4 right-4 text-app-text-muted hover:text-app-text-primary transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <h3 className="text-lg font-bold text-white mb-1 flex items-center gap-2">
-              <Building className="w-5 h-5 text-blue-400" />
+            <h3 className="text-lg font-bold text-app-text-primary mb-1 flex items-center gap-2">
+              <Building className="w-5 h-5 text-app-accent" />
               {activeModal === 'addProp' ? 'Add New Property' : 'Rename Property'}
             </h3>
-            <p className="text-xs text-slate-500 mb-6">
+            <p className="text-xs text-app-text-muted mb-6">
               {activeModal === 'addProp' ? 'Enter a name for your property portfolio.' : 'Change the name of this property.'}
             </p>
 
             <form onSubmit={activeModal === 'addProp' ? handleAddProperty : handleEditProperty} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Property Name</label>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-app-text-secondary mb-2">Property Name</label>
                 <input
                   type="text"
                   required
@@ -396,7 +396,7 @@ const Properties = () => {
                   value={propertyName}
                   onChange={(e) => setPropertyName(e.target.value)}
                   placeholder="e.g. Sunshine Heights, Block B"
-                  className="w-full bg-slate-950/80 border border-slate-900 focus:border-blue-500 rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-700 outline-none transition-colors"
+                  className="w-full bg-app-card-from border border-app-card-border focus:border-app-accent rounded-lg px-4 py-2.5 text-sm text-app-text-primary placeholder-app-text-muted outline-none transition-colors"
                 />
               </div>
 
@@ -405,14 +405,14 @@ const Properties = () => {
                   type="button"
                   onClick={() => setActiveModal(null)}
                   disabled={actionLoading}
-                  className="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white transition-colors border border-transparent disabled:opacity-50 cursor-pointer"
+                  className="px-4 py-2 text-xs font-semibold text-app-text-secondary hover:text-app-text-primary transition-colors border border-transparent disabled:opacity-50 cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={actionLoading}
-                  className="px-4 py-2 text-xs font-semibold uppercase tracking-wider bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors flex items-center gap-1.5 shadow-md shadow-blue-900/20 disabled:opacity-50 cursor-pointer"
+                  className="px-4 py-2 text-xs font-semibold uppercase tracking-wider bg-app-accent hover:bg-app-accent-hover text-white rounded-lg transition-colors flex items-center gap-1.5 shadow-md disabled:opacity-50 cursor-pointer"
                 >
                   {actionLoading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                   {activeModal === 'addProp' ? 'Create' : 'Save'}
@@ -426,19 +426,19 @@ const Properties = () => {
       {/* 2. Add/Edit Room Modal */}
       {(activeModal === 'addRoom' || activeModal === 'editRoom') && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="relative w-full max-w-md bg-slate-950 border border-slate-900 rounded-2xl p-6 shadow-2xl animate-in fade-in duration-200">
+          <div className="relative w-full max-w-md bg-app-bg border border-app-border rounded-2xl p-6 shadow-2xl animate-in fade-in duration-200">
             <button
               onClick={() => setActiveModal(null)}
-              className="absolute top-4 right-4 text-slate-500 hover:text-slate-300 transition-colors cursor-pointer"
+              className="absolute top-4 right-4 text-app-text-muted hover:text-app-text-primary transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <h3 className="text-lg font-bold text-white mb-1 flex items-center gap-2">
-              <Bed className="w-5 h-5 text-blue-400" />
+            <h3 className="text-lg font-bold text-app-text-primary mb-1 flex items-center gap-2">
+              <Bed className="w-5 h-5 text-app-accent" />
               {activeModal === 'addRoom' ? 'Add Room' : 'Edit Room Details'}
             </h3>
-            <p className="text-xs text-slate-500 mb-6">
+            <p className="text-xs text-app-text-muted mb-6">
               {activeModal === 'addRoom' 
                 ? `Add a room inside property "${selectedProperty?.name}"` 
                 : 'Modify the configurations of the selected room.'
@@ -447,7 +447,7 @@ const Properties = () => {
 
             <form onSubmit={activeModal === 'addRoom' ? handleAddRoom : handleEditRoom} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Room Number / Name</label>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-app-text-secondary mb-2">Room Number / Name</label>
                 <input
                   type="text"
                   required
@@ -455,26 +455,26 @@ const Properties = () => {
                   value={roomData.roomNumber}
                   onChange={(e) => setRoomData({ ...roomData, roomNumber: e.target.value })}
                   placeholder="e.g. 101, Room A, Penthouse"
-                  className="w-full bg-slate-950/80 border border-slate-900 focus:border-blue-500 rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-700 outline-none transition-colors"
+                  className="w-full bg-app-card-from border border-app-card-border focus:border-app-accent rounded-lg px-4 py-2.5 text-sm text-app-text-primary placeholder-app-text-muted outline-none transition-colors"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Tenant Name (Optional)</label>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-app-text-secondary mb-2">Tenant Name (Optional)</label>
                 <input
                   type="text"
                   disabled={actionLoading}
                   value={roomData.tenantName}
                   onChange={(e) => setRoomData({ ...roomData, tenantName: e.target.value })}
                   placeholder="e.g. Jane Watson (Leave blank if unoccupied)"
-                  className="w-full bg-slate-950/80 border border-slate-900 focus:border-blue-500 rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-700 outline-none transition-colors"
+                  className="w-full bg-app-card-from border border-app-card-border focus:border-app-accent rounded-lg px-4 py-2.5 text-sm text-app-text-primary placeholder-app-text-muted outline-none transition-colors"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Base Monthly Rent (₹)</label>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-app-text-secondary mb-2">Base Monthly Rent (₹)</label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-app-text-muted">
                     <span className="text-sm">₹</span>
                   </div>
                   <input
@@ -486,7 +486,7 @@ const Properties = () => {
                     value={roomData.baseRent}
                     onChange={(e) => setRoomData({ ...roomData, baseRent: e.target.value })}
                     placeholder="e.g. 12000"
-                    className="w-full bg-slate-950/80 border border-slate-900 focus:border-blue-500 rounded-lg pl-8 pr-4 py-2.5 text-sm text-white placeholder-gray-700 outline-none transition-colors"
+                    className="w-full bg-app-card-from border border-app-card-border focus:border-app-accent rounded-lg pl-8 pr-4 py-2.5 text-sm text-app-text-primary placeholder-app-text-muted outline-none transition-colors"
                   />
                 </div>
               </div>
@@ -496,14 +496,14 @@ const Properties = () => {
                   type="button"
                   onClick={() => setActiveModal(null)}
                   disabled={actionLoading}
-                  className="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white transition-colors border border-transparent disabled:opacity-50 cursor-pointer"
+                  className="px-4 py-2 text-xs font-semibold text-app-text-secondary hover:text-app-text-primary transition-colors border border-transparent disabled:opacity-50 cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={actionLoading}
-                  className="px-4 py-2 text-xs font-semibold uppercase tracking-wider bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors flex items-center gap-1.5 shadow-md shadow-blue-900/20 disabled:opacity-50 cursor-pointer"
+                  className="px-4 py-2 text-xs font-semibold uppercase tracking-wider bg-app-accent hover:bg-app-accent-hover text-white rounded-lg transition-colors flex items-center gap-1.5 shadow-md disabled:opacity-50 cursor-pointer"
                 >
                   {actionLoading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                   {activeModal === 'addRoom' ? 'Add' : 'Save'}
@@ -517,14 +517,14 @@ const Properties = () => {
       {/* 3. Delete Confirmation Modal */}
       {deleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="relative w-full max-w-md bg-slate-950 border border-red-950/50 rounded-2xl p-6 shadow-2xl animate-in fade-in duration-200">
-            <h3 className="text-lg font-bold text-red-400 mb-2 flex items-center gap-2">
-              <AlertTriangle className="w-5 h-5 text-red-500" />
+          <div className="relative w-full max-w-md bg-app-bg border border-app-danger-border rounded-2xl p-6 shadow-2xl animate-in fade-in duration-200">
+            <h3 className="text-lg font-bold text-app-danger mb-2 flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-app-danger" />
               Confirm Delete
             </h3>
             
-            <p className="text-sm text-slate-300 leading-relaxed mb-4">
-              Are you sure you want to delete <span className="font-semibold text-white">"{deleteConfirm.title}"</span>? 
+            <p className="text-sm text-app-text-secondary leading-relaxed mb-4">
+              Are you sure you want to delete <span className="font-semibold text-app-text-primary">"{deleteConfirm.title}"</span>? 
               {deleteConfirm.type === 'property' && ' This action will delete all nested rooms. '}
               This cannot be undone.
             </p>
@@ -534,14 +534,14 @@ const Properties = () => {
                 type="button"
                 onClick={() => setDeleteConfirm(null)}
                 disabled={actionLoading}
-                className="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white transition-colors border border-transparent disabled:opacity-50 cursor-pointer"
+                className="px-4 py-2 text-xs font-semibold text-app-text-secondary hover:text-app-text-primary transition-colors border border-transparent disabled:opacity-50 cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={deleteConfirm.type === 'property' ? handleDeleteProperty : handleDeleteRoom}
                 disabled={actionLoading}
-                className="px-4 py-2 text-xs font-semibold uppercase tracking-wider bg-red-600 hover:bg-red-500 text-white rounded-lg transition-colors flex items-center gap-1.5 shadow-md shadow-red-900/20 disabled:opacity-50 cursor-pointer"
+                className="px-4 py-2 text-xs font-semibold uppercase tracking-wider bg-app-danger hover:bg-app-danger-hover text-white rounded-lg transition-colors flex items-center gap-1.5 shadow-md disabled:opacity-50 cursor-pointer"
               >
                 {actionLoading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                 Delete

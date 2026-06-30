@@ -182,59 +182,59 @@ const TenantRentHistory = () => {
   };
 
   return (
-    <div className="w-full flex flex-col gap-6 font-sans text-slate-100">
+    <div className="w-full flex flex-col gap-6 font-sans text-app-text-primary transition-colors">
       {/* Header section */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-900/80">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-app-card-border">
         <div className="flex items-center gap-4">
           <button
             id="btn-back-to-dashboard"
             onClick={() => navigate('/tenant-dashboard')}
-            className="p-2.5 bg-slate-950 border border-slate-900 hover:border-slate-800 text-slate-400 hover:text-slate-200 rounded-xl transition-all cursor-pointer shadow-md"
+            className="p-2.5 bg-app-card-to border border-app-card-border hover:border-app-card-hover text-app-text-secondary hover:text-app-text-primary rounded-xl transition-all cursor-pointer shadow-md"
             title="Go back to Dashboard"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
-            <h1 className="text-xl md:text-2xl font-black text-slate-200 tracking-tight flex items-center gap-2">
-              <History className="w-6 h-6 text-emerald-500/70" />
+            <h1 className="text-xl md:text-2xl font-black text-app-text-primary tracking-tight flex items-center gap-2">
+              <History className="w-6 h-6 text-app-tenant-accent/70" />
               Rent Payment History
             </h1>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-app-text-muted mt-0.5">
               Review and export your past billing receipts.
             </p>
           </div>
         </div>
 
-        <div className="text-slate-500 text-[10px] md:text-right font-medium bg-slate-950/40 border border-slate-900/60 rounded-xl px-4 py-2.5 max-w-xs self-start md:self-auto">
-          📅 Displaying up to the <span className="text-emerald-400 font-bold">latest 3 statements</span> for each linked rental property.
+        <div className="text-app-text-muted text-[10px] md:text-right font-medium bg-app-card-from border border-app-card-border rounded-xl px-4 py-2.5 max-w-xs self-start md:self-auto">
+          📅 Displaying up to the <span className="text-app-tenant-accent font-bold">latest 3 statements</span> for each linked rental property.
         </div>
       </div>
 
       {/* Main content display */}
       {loading ? (
         <div className="flex flex-col justify-center items-center py-20 gap-3">
-          <Loader2 className="w-10 h-10 text-emerald-500 animate-spin" />
-          <p className="text-xs text-slate-500 font-medium">Loading history statement archive...</p>
+          <Loader2 className="w-10 h-10 text-app-tenant-accent animate-spin" />
+          <p className="text-xs text-app-text-muted font-medium">Loading history statement archive...</p>
         </div>
       ) : error ? (
-        <div className="p-5 bg-red-950/20 border border-red-900/30 rounded-2xl flex flex-col md:flex-row items-center gap-4 max-w-xl mx-auto my-12">
-          <AlertTriangle className="w-8 h-8 text-red-500 shrink-0" />
+        <div className="p-5 bg-app-danger-glow border border-app-danger-border rounded-2xl flex flex-col md:flex-row items-center gap-4 max-w-xl mx-auto my-12">
+          <AlertTriangle className="w-8 h-8 text-app-danger shrink-0" />
           <div className="text-center md:text-left">
-            <h3 className="text-sm font-bold text-red-400">An error occurred</h3>
-            <p className="text-xs text-red-300/80 mt-1">{error}</p>
+            <h3 className="text-sm font-bold text-app-danger">An error occurred</h3>
+            <p className="text-xs text-app-danger/80 mt-1">{error}</p>
           </div>
         </div>
       ) : rooms.length === 0 ? (
-        <div className="text-center py-20 border border-dashed border-slate-900 rounded-3xl bg-slate-950/20 max-w-2xl mx-auto w-full">
-          <Home className="w-12 h-12 text-slate-700 mx-auto mb-4" />
-          <h3 className="text-slate-300 font-semibold text-base">No Linked Rentals</h3>
-          <p className="text-xs text-slate-500 mt-1.5 max-w-sm mx-auto leading-relaxed">
+        <div className="text-center py-20 border border-dashed border-app-card-border rounded-3xl bg-app-card-from max-w-2xl mx-auto w-full">
+          <Home className="w-12 h-12 text-app-text-muted mx-auto mb-4" />
+          <h3 className="text-app-text-primary font-semibold text-base">No Linked Rentals</h3>
+          <p className="text-xs text-app-text-muted mt-1.5 max-w-sm mx-auto leading-relaxed">
             You don't have any linked properties yet. Enter a 6-digit tenant code on your dashboard overview page to link a room.
           </p>
           <button
             id="btn-go-to-dashboard"
             onClick={() => navigate('/tenant-dashboard')}
-            className="mt-5 px-5 py-2 text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl cursor-pointer transition-colors"
+            className="mt-5 px-5 py-2 text-xs font-semibold bg-app-tenant-accent hover:bg-app-tenant-accent-hover text-white rounded-xl cursor-pointer transition-colors"
           >
             Go to Dashboard Overview
           </button>
@@ -250,28 +250,28 @@ const TenantRentHistory = () => {
             return (
               <div key={room.id} className="space-y-4">
                 {/* Room Group Header */}
-                <div className="p-4 bg-slate-950/50 border border-slate-900/80 rounded-2xl flex items-center justify-between shadow-md">
+                <div className="p-4 bg-linear-to-b from-app-card-from to-app-card-to border border-app-card-border rounded-2xl flex items-center justify-between shadow-md">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-950/40 border border-emerald-900/30 flex items-center justify-center">
-                      <Home className="w-5 h-5 text-emerald-500" />
+                    <div className="w-10 h-10 rounded-xl bg-app-tenant-accent-glow border border-app-tenant-accent-border flex items-center justify-center">
+                      <Home className="w-5 h-5 text-app-tenant-accent" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-bold text-slate-200 capitalize">{room.properties?.name || 'Property'}</h3>
-                      <p className="text-[10px] text-slate-500 mt-0.5">
-                        Room {room.room_number} | Owner: <span className="text-slate-400 font-semibold">{owners[room.properties?.owner_id] || 'Owner'}</span> | Base Rent: ₹{room.base_rent?.toLocaleString('en-IN')}
+                      <h3 className="text-sm font-bold text-app-text-primary capitalize">{room.properties?.name || 'Property'}</h3>
+                      <p className="text-[10px] text-app-text-muted mt-0.5">
+                        Room {room.room_number} | Owner: <span className="text-app-text-secondary font-semibold">{owners[room.properties?.owner_id] || 'Owner'}</span> | Base Rent: ₹{room.base_rent?.toLocaleString('en-IN')}
                       </p>
                     </div>
                   </div>
 
-                  <span className="text-[10px] bg-slate-900 text-slate-400 px-2 py-0.5 rounded font-mono border border-slate-800">
+                  <span className="text-[10px] bg-app-card-to text-app-text-secondary px-2 py-0.5 rounded font-mono border border-app-card-border">
                     CODE ID: {room.tenant_code}
                   </span>
                 </div>
 
                 {/* Receipts Grid */}
                 {roomReceipts.length === 0 ? (
-                  <div className="p-6 border border-dashed border-slate-900 rounded-2xl bg-slate-950/10 text-center">
-                    <p className="text-xs text-slate-600 italic">No rent receipts generated for this room yet.</p>
+                  <div className="p-6 border border-dashed border-app-card-border rounded-2xl bg-app-card-from text-center">
+                    <p className="text-xs text-app-text-muted italic">No rent receipts generated for this room yet.</p>
                   </div>
                 ) : (
                   <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -282,69 +282,69 @@ const TenantRentHistory = () => {
                       return (
                         <div 
                           key={receipt.id}
-                          className="group p-5 bg-slate-950/30 border border-slate-900/70 rounded-2xl flex flex-col justify-between hover:border-slate-800 transition-all relative overflow-hidden"
+                          className="group p-5 bg-linear-to-b from-app-card-from to-app-card-to border border-app-card-border rounded-2xl flex flex-col justify-between hover:border-app-card-hover transition-colors relative overflow-hidden"
                         >
-                          <div className="absolute top-0 left-0 right-0 h-[2px] bg-slate-900 group-hover:bg-emerald-500/40 transition-colors" />
+                          <div className="absolute top-0 left-0 right-0 h-[2px] bg-app-card-border group-hover:bg-app-tenant-accent/40 transition-colors" />
 
                           {/* Card Content */}
                           <div>
                             <div className="flex justify-between items-start mb-4">
                               <div>
-                                <span className="text-[9px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1">
-                                  <Calendar className="w-3 h-3 text-slate-650" /> Billing Date
+                                <span className="text-[9px] font-bold uppercase tracking-wider text-app-text-muted flex items-center gap-1">
+                                  <Calendar className="w-3 h-3 text-app-text-muted" /> Billing Date
                                 </span>
-                                <h4 className="text-sm font-bold text-slate-200 mt-0.5">{receipt.billing_date}</h4>
+                                <h4 className="text-sm font-bold text-app-text-primary mt-0.5">{receipt.billing_date}</h4>
                               </div>
                               <span className={`text-[9px] px-2.5 py-0.5 rounded-full font-bold border ${
                                 receipt.status === 'Paid' 
-                                  ? 'bg-emerald-950/40 text-emerald-400 border-emerald-900/30' 
-                                  : 'bg-amber-950/40 text-amber-400 border-amber-900/30'
+                                  ? 'bg-app-tenant-accent-glow text-app-tenant-accent border-app-tenant-accent-border' 
+                                  : 'bg-amber-500/10 text-amber-500 border border-amber-500/20'
                               }`}>
                                 {receipt.status || 'Pending'}
                               </span>
                             </div>
 
                             {/* Charges Breakdown Panel */}
-                            <div className="space-y-2 border-t border-b border-slate-900/80 py-3.5 my-3.5">
+                            <div className="space-y-2 border-t border-b border-app-card-border py-3.5 my-3.5">
                               <div className="flex justify-between text-xs">
-                                <span className="text-slate-500 flex items-center gap-1">
-                                  <Banknote className="w-3.5 h-3.5 text-emerald-500/60" /> Base Rent
+                                <span className="text-app-text-muted flex items-center gap-1">
+                                  <Banknote className="w-3.5 h-3.5 text-app-tenant-accent/60" /> Base Rent
                                 </span>
-                                <span className="font-semibold text-slate-300">₹{receipt.base_rent?.toLocaleString('en-IN')}</span>
+                                <span className="font-semibold text-app-text-secondary">₹{receipt.base_rent?.toLocaleString('en-IN')}</span>
                               </div>
 
                               <div className="flex justify-between text-xs">
-                                <span className="text-slate-500 flex items-center gap-1.5">
+                                <span className="text-app-text-muted flex items-center gap-1.5">
                                   <Zap className="w-3.5 h-3.5 text-amber-500/60" /> Electricity
-                                  <span className="text-[9px] text-slate-600">({electricityUnits} units)</span>
+                                  <span className="text-[9px] text-app-text-muted">({electricityUnits} units)</span>
                                 </span>
-                                <span className="font-semibold text-slate-300">₹{electricityTotal?.toLocaleString('en-IN')}</span>
+                                <span className="font-semibold text-app-text-secondary">₹{electricityTotal?.toLocaleString('en-IN')}</span>
                               </div>
 
                               {receipt.water_charges > 0 && (
                                 <div className="flex justify-between text-xs">
-                                  <span className="text-slate-500 flex items-center gap-1">
-                                    <Droplets className="w-3.5 h-3.5 text-blue-500/60" /> Water
+                                  <span className="text-app-text-muted flex items-center gap-1">
+                                    <Droplets className="w-3.5 h-3.5 text-app-accent/60" /> Water
                                   </span>
-                                  <span className="font-semibold text-slate-300">₹{receipt.water_charges?.toLocaleString('en-IN')}</span>
+                                  <span className="font-semibold text-app-text-secondary">₹{receipt.water_charges?.toLocaleString('en-IN')}</span>
                                 </div>
                               )}
 
                               {receipt.trash_charges > 0 && (
                                 <div className="flex justify-between text-xs">
-                                  <span className="text-slate-500 flex items-center gap-1">
-                                    <Trash2 className="w-3.5 h-3.5 text-orange-500/60" /> Trash
+                                  <span className="text-app-text-muted flex items-center gap-1">
+                                    <Trash2 className="w-3.5 h-3.5 text-app-danger/60" /> Trash
                                   </span>
-                                  <span className="font-semibold text-slate-300">₹{receipt.trash_charges?.toLocaleString('en-IN')}</span>
+                                  <span className="font-semibold text-app-text-secondary">₹{receipt.trash_charges?.toLocaleString('en-IN')}</span>
                                 </div>
                               )}
 
                               {receipt.previous_balance > 0 && (
                                 <div className="flex justify-between text-xs">
-                                  <span className="text-slate-500 flex items-center gap-1">
-                                    <Wallet className="w-3.5 h-3.5 text-indigo-500/60" /> Prev Balance
+                                  <span className="text-app-text-muted flex items-center gap-1">
+                                    <Wallet className="w-3.5 h-3.5 text-app-accent/60" /> Prev Balance
                                   </span>
-                                  <span className="font-semibold text-slate-300">₹{receipt.previous_balance?.toLocaleString('en-IN')}</span>
+                                  <span className="font-semibold text-app-text-secondary">₹{receipt.previous_balance?.toLocaleString('en-IN')}</span>
                                 </div>
                               )}
                             </div>
@@ -353,15 +353,15 @@ const TenantRentHistory = () => {
                           {/* Grand Total & Export Actions */}
                           <div>
                             <div className="flex justify-between items-center mb-4">
-                              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Total Bill</span>
-                              <span className="text-base font-black text-emerald-400">₹{receipt.total_bill?.toLocaleString('en-IN')}</span>
+                              <span className="text-[10px] font-bold uppercase tracking-wider text-app-text-muted">Total Bill</span>
+                              <span className="text-base font-black text-app-tenant-accent">₹{receipt.total_bill?.toLocaleString('en-IN')}</span>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-2 pt-3 border-t border-slate-900/60">
+                            <div className="grid grid-cols-2 gap-2 pt-3 border-t border-app-card-border">
                               <button
                                 id={`btn-share-receipt-${receipt.id}`}
                                 onClick={() => triggerExport(receipt, 'share')}
-                                className="flex items-center justify-center gap-1.5 py-2 bg-slate-950 border border-slate-900 hover:border-slate-800 rounded-xl transition-all cursor-pointer text-xs font-semibold text-slate-400 hover:text-white"
+                                className="flex items-center justify-center gap-1.5 py-2 bg-app-card-to border border-app-card-border hover:bg-app-card-hover/20 text-app-text-secondary hover:text-app-text-primary rounded-xl transition-all cursor-pointer text-xs font-semibold"
                                 title="Share Receipt"
                               >
                                 <Share2 className="w-3.5 h-3.5" />
@@ -371,7 +371,7 @@ const TenantRentHistory = () => {
                               <button
                                 id={`btn-download-receipt-${receipt.id}`}
                                 onClick={() => triggerExport(receipt, 'download')}
-                                className="flex items-center justify-center gap-1.5 py-2 bg-slate-950 border border-slate-900 hover:border-slate-800 rounded-xl transition-all cursor-pointer text-xs font-semibold text-slate-400 hover:text-white"
+                                className="flex items-center justify-center gap-1.5 py-2 bg-app-card-to border border-app-card-border hover:bg-app-card-hover/20 text-app-text-secondary hover:text-app-text-primary rounded-xl transition-all cursor-pointer text-xs font-semibold"
                                 title="Download PNG"
                               >
                                 <Download className="w-3.5 h-3.5" />

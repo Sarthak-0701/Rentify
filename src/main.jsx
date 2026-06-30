@@ -19,13 +19,16 @@ import TenantLayout from './layouts/TenantLayout'
 import ReceiptHistory from './pages/owner/ReceiptHistory'
 import TenantRentHistory from './pages/tenant/TenantRentHistory'
 import { PrivacyPolicy, TermsAndServices } from './pages/LegalDox'
+import { useThemeStore } from './supabase/store/ThemeStore'
 
 const MainApp = () => {
   const initializeAuth = useAuthStore((state) => state.initializeAuth);
+  const initTheme = useThemeStore((state) => state.initTheme);
 
   useEffect(() => {
     initializeAuth();
-  }, [initializeAuth]);
+    initTheme();
+  }, [initializeAuth, initTheme]);
 
   const router = createBrowserRouter([
     {

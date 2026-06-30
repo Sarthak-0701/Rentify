@@ -1,11 +1,106 @@
 @import "tailwindcss";
 
+:root {
+  /* Light Theme Color Tokens */
+  --bg-app: #ffffff;
+  --bg-gradient-from: #f8fafc; /* slate-50 */
+  --bg-gradient-to: #eff6ff;   /* blue-50 */
+  --text-primary: #0f172a;     /* slate-900 */
+  --text-secondary: #475569;   /* slate-600 */
+  --text-muted: #64748b;       /* slate-500 */
+  --border-app: #e2e8f0;       /* slate-200 */
+  --card-bg-from: #ffffff;
+  --card-bg-to: #f1f5f9;       /* slate-100 */
+  --card-border: #e2e8f0;      /* slate-200 */
+  --card-hover-border: #cbd5e1; /* slate-300 */
+  --nav-bg: rgba(255, 255, 255, 0.9);
+  --sidebar-bg: #f8fafc;
+  --sidebar-border: #e2e8f0;
+  
+  --accent-color: #2563eb;      /* blue-600 */
+  --accent-hover: #1d4ed8;      /* blue-700 */
+  --accent-bg-glow: rgba(37, 99, 235, 0.08);
+  --accent-border: rgba(37, 99, 235, 0.2);
+  
+  --tenant-accent: #059669;     /* emerald-600 */
+  --tenant-accent-hover: #047857; /* emerald-700 */
+  --tenant-accent-glow: rgba(5, 150, 105, 0.08);
+  --tenant-accent-border: rgba(5, 150, 105, 0.2);
+}
+
+:root.dark {
+  /* Dark Theme Color Tokens - Black and Gray Family */
+  --bg-app: #000000;
+  --bg-gradient-from: #121212;  /* dark neutral gray */
+  --bg-gradient-to: #000000;
+  --text-primary: #f4f4f5;      /* gray-100 */
+  --text-secondary: #a1a1aa;    /* gray-400 */
+  --text-muted: #71717a;       /* gray-500 */
+  --border-app: #27272a;       /* gray-800 */
+  --card-bg-from: #18181b;      /* zinc-900 */
+  --card-bg-to: #09090b;        /* zinc-950 */
+  --card-border: #27272a;      /* zinc-800 */
+  --card-hover-border: #3f3f46; /* zinc-700 */
+  --nav-bg: rgba(9, 9, 11, 0.85); /* zinc-950 translucent */
+  --sidebar-bg: #09090b;        /* zinc-950 */
+  --sidebar-border: rgba(39, 39, 42, 0.6); /* zinc-800 translucent */
+  
+  --accent-color: #3b82f6;      /* blue-500 */
+  --accent-hover: #2563eb;      /* blue-600 */
+  --accent-bg-glow: rgba(59, 130, 246, 0.1);
+  --accent-border: rgba(59, 130, 246, 0.3);
+  
+  --tenant-accent: #34d399;     /* emerald-400 */
+  --tenant-accent-hover: #10b981; /* emerald-500 */
+  --tenant-accent-glow: rgba(52, 211, 153, 0.1);
+  --tenant-accent-border: rgba(52, 211, 153, 0.3);
+}
+
+/* Danger colors (red) remain consistent in both themes */
+:root, :root.dark {
+  --danger-color: #ef4444;      /* red-500 */
+  --danger-hover: #dc2626;      /* red-600 */
+  --danger-bg-glow: rgba(239, 68, 68, 0.1);
+  --danger-border: rgba(239, 68, 68, 0.3);
+}
+
 @theme {
   --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  
+  --color-app-bg: var(--bg-app);
+  --color-app-bg-from: var(--bg-gradient-from);
+  --color-app-bg-to: var(--bg-gradient-to);
+  --color-app-text-primary: var(--text-primary);
+  --color-app-text-secondary: var(--text-secondary);
+  --color-app-text-muted: var(--text-muted);
+  --color-app-border: var(--border-app);
+  --color-app-card-from: var(--card-bg-from);
+  --color-app-card-to: var(--card-bg-to);
+  --color-app-card-border: var(--card-border);
+  --color-app-card-hover: var(--card-hover-border);
+  --color-app-nav-bg: var(--nav-bg);
+  --color-app-sidebar-bg: var(--sidebar-bg);
+  --color-app-sidebar-border: var(--sidebar-border);
+  
+  --color-app-accent: var(--accent-color);
+  --color-app-accent-hover: var(--accent-hover);
+  --color-app-accent-glow: var(--accent-bg-glow);
+  --color-app-accent-border: var(--accent-border);
+  
+  --color-app-tenant-accent: var(--tenant-accent);
+  --color-app-tenant-accent-hover: var(--tenant-accent-hover);
+  --color-app-tenant-accent-glow: var(--tenant-accent-glow);
+  --color-app-tenant-accent-border: var(--tenant-accent-border);
+  
+  --color-app-danger: var(--danger-color);
+  --color-app-danger-hover: var(--danger-hover);
+  --color-app-danger-glow: var(--danger-bg-glow);
+  --color-app-danger-border: var(--danger-border);
 }
 
 body{
-  background-color: #000000;
+  background-color: var(--bg-app);
+  color: var(--text-primary);
   font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -17,23 +112,37 @@ button:active{
     transform: scale(0.97);
 }
 
-/* Target the browser root window scrollbar globally */
+/* Target the browser root window scrollbar globally with theme variables */
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #000000; /* Blends perfectly into your black page body background */
+  background: var(--bg-app); /* Blends perfectly into active page body background */
+  transition: background 0.3s;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1e293b; /* slate-800 matches your dark aesthetics */
+  background: var(--card-border); /* matches your theme borders */
   border-radius: 9999px;
-  border: 2px solid #000000; /* Creates an elegant gap spacing around the thumb */
+  border: 2.5px solid var(--bg-app); /* Creates an elegant gap spacing around the thumb */
+  transition: background 0.3s, border-color 0.3s;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155; /* slate-700 on hover */
+  background: var(--text-muted);
+}
+
+/* Smooth momentum scrolling for overflow containers on iOS/mobile devices */
+.overflow-y-auto, .overflow-x-auto, .overflow-auto, select-custom-scroll {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* CSS Containment to isolate dynamic animation repaints and prevent page reflow lag */
+.flow-container {
+  contain: layout paint style;
+  display: inline-block;
 }
 
 /* Optional: Smooth scroll behavior across page transitions */

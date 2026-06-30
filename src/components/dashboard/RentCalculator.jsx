@@ -331,23 +331,23 @@ const RentCalculator = () => {
     <>
       <div 
         ref={receiptRef}
-        className='h-full w-full max-w-md bg-linear-to-b from-slate-950 to-black border border-slate-900 p-5 rounded-2xl shadow-2xl text-white flex flex-col justify-between relative overflow-hidden'
+        className='h-full w-full max-w-md bg-linear-to-b from-app-card-from to-app-card-to border border-app-card-border p-5 rounded-2xl shadow-2xl text-app-text-primary flex flex-col justify-between relative overflow-hidden transition-colors'
       >
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-px bg-linear-to-r from-transparent via-blue-500/30 to-transparent" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-px bg-linear-to-r from-transparent via-app-accent/30 to-transparent" />
       
       <div className="flex justify-between items-center mb-4">
-        <h2 className='text-xl font-bold text-white tracking-tight'>Rent Calculator</h2>
+        <h2 className='text-xl font-bold text-app-text-primary tracking-tight'>Rent Calculator</h2>
         <div className="flex items-center gap-1">
           <button 
             onClick={handleShare}
-            className="p-1.5 hover:bg-slate-900 text-gray-400 hover:text-white rounded-lg transition-colors cursor-pointer"
+            className="p-1.5 hover:bg-app-card-hover/20 text-app-text-secondary hover:text-app-text-primary rounded-lg transition-colors cursor-pointer"
             title="Share Receipt"
           >
             <Share2 className="h-4 w-4" />
           </button>
           <button 
             onClick={downloadReceiptImage}
-            className="p-1.5 hover:bg-slate-900 text-gray-400 hover:text-white rounded-lg transition-colors cursor-pointer"
+            className="p-1.5 hover:bg-app-card-hover/20 text-app-text-secondary hover:text-app-text-primary rounded-lg transition-colors cursor-pointer"
             title="Download Receipt PNG"
           >
             <Download className="h-4 w-4" />
@@ -359,41 +359,41 @@ const RentCalculator = () => {
         {/* Row 1: Property & Room Selection Dropdowns */}
         <div className='grid grid-cols-2 gap-3'>
           <div className="relative">
-            <Home className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
+            <Home className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-app-text-muted" />
             <select 
               value={selectedPropertyId} 
               onChange={handlePropertyChange} 
-              className="w-full bg-slate-900/90 border border-slate-800 focus:border-blue-500 pl-9 pr-3 py-2 rounded-lg text-xs text-white outline-none appearance-none cursor-pointer"
+              className="w-full bg-app-card-from border border-app-card-border focus:border-app-accent pl-9 pr-3 py-2 rounded-lg text-xs text-app-text-primary outline-none appearance-none cursor-pointer transition-colors"
             >
-              <option value="">Choose Property</option>
+              <option value="" className="bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100">Choose Property</option>
               {properties.map(p => (
-                <option key={p.id} value={p.id}>{p.name}</option>
+                <option key={p.id} value={p.id} className="bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100">{p.name}</option>
               ))}
             </select>
           </div>
 
           <div className="relative">
-            <Home className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
+            <Home className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-app-text-muted" />
             <select 
               value={selectedRoomId} 
               onChange={handleRoomChange} 
               disabled={!selectedPropertyId}
-              className="w-full bg-slate-900/90 border border-slate-800 focus:border-blue-500 pl-9 pr-3 py-2 rounded-lg text-xs text-white outline-none appearance-none cursor-pointer disabled:opacity-40"
+              className="w-full bg-app-card-from border border-app-card-border focus:border-app-accent pl-9 pr-3 py-2 rounded-lg text-xs text-app-text-primary outline-none appearance-none cursor-pointer disabled:opacity-40 transition-colors"
             >
-              <option value="">Select Room</option>
+              <option value="" className="bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100">Select Room</option>
               {rooms.map(r => (
-                <option key={r.id} value={r.id}>{r.room_number}</option>
+                <option key={r.id} value={r.id} className="bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100">{r.room_number}</option>
               ))}
             </select>
           </div>
 
           <div className="relative col-span-2">
-            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
+            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-app-text-muted" />
             <input 
               name="date" 
               onChange={handleChange} 
               type="date" 
-              className="w-full bg-slate-900/90 border border-slate-800 focus:border-blue-500 pl-9 pr-3 py-2 rounded-lg text-xs text-white placeholder-gray-500 outline-none transition-colors scheme-dark" 
+              className="w-full bg-app-card-from border border-app-card-border focus:border-app-accent pl-9 pr-3 py-2 rounded-lg text-xs text-app-text-primary placeholder-app-text-muted outline-none transition-colors dark:scheme-dark" 
             />
           </div>
         </div>
@@ -401,73 +401,73 @@ const RentCalculator = () => {
         {/* Row 2: RESTORED Tenant & Owner Layout Fields */}
         <div className='grid grid-cols-2 gap-3'>
           <div className="relative">
-            <User className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
+            <User className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-app-text-muted" />
             <input 
               name="tenant" 
               readOnly
               value={form.tenant} 
               type="text" 
               placeholder="Tenant Name" 
-              className="w-full bg-slate-950 border border-slate-900 pl-9 pr-3 py-2 rounded-lg text-xs text-gray-400 outline-none capitalize" 
+              className="w-full bg-app-card-to/40 border border-app-card-border pl-9 pr-3 py-2 rounded-lg text-xs text-app-text-muted outline-none capitalize transition-colors" 
             />
           </div>
           <div className="relative">
-            <User className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
+            <User className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-app-text-muted" />
             <input 
               name="owner" 
               readOnly
               value={form.owner} 
               type="text" 
               placeholder="Owner Name" 
-              className="w-full bg-slate-950 border border-slate-900 pl-9 pr-3 py-2 rounded-lg text-xs text-gray-400 outline-none capitalize" 
+              className="w-full bg-app-card-to/40 border border-app-card-border pl-9 pr-3 py-2 rounded-lg text-xs text-app-text-muted outline-none capitalize transition-colors" 
             />
           </div>
         </div>
 
-        <div className='h-px bg-slate-900 my-1' />
+        <div className='h-px bg-app-card-border my-1' />
 
         {/* Row 3: Base Rent */}
         <div className="relative">
-          <Banknote className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-emerald-400" />
+          <Banknote className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-app-tenant-accent/65" />
           <input 
             name="baseRent" 
             readOnly
             value={form.baseRent || ''} 
             type="number" 
             placeholder="Monthly Base Rent (Auto-filled)" 
-            className="w-full bg-slate-950 border border-slate-900 pl-10 pr-4 py-2 rounded-lg text-xs text-gray-400 outline-none" 
+            className="w-full bg-app-card-to/40 border border-app-card-border pl-10 pr-4 py-2 rounded-lg text-xs text-app-text-muted outline-none transition-colors" 
           />
         </div>
 
         {/* Row 4: Electricity Detailed Components */}
-        <div className='grid grid-cols-3 gap-2 bg-slate-950/60 p-2.5 rounded-xl border border-slate-900'>
+        <div className='grid grid-cols-3 gap-2 bg-app-card-to border border-app-card-border p-2.5 rounded-xl transition-colors'>
           <div className="flex flex-col gap-1">
-            <span className="text-[9px] font-semibold uppercase tracking-wider text-gray-400 ml-1">Old Reading</span>
-            <input name="oldRead" onChange={handleChange} type="number" className="bg-slate-900 border border-slate-800 rounded px-2 py-1 text-xs text-white outline-none focus:border-blue-500" />
+            <span className="text-[9px] font-semibold uppercase tracking-wider text-app-text-secondary ml-1">Old Reading</span>
+            <input name="oldRead" onChange={handleChange} type="number" className="bg-app-card-from border border-app-card-border rounded px-2 py-1 text-xs text-app-text-primary outline-none focus:border-app-accent transition-colors" />
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-[9px] font-semibold uppercase tracking-wider text-gray-400 ml-1">New Reading</span>
-            <input name="newRead" onChange={handleChange} type="number" className="bg-slate-900 border border-slate-800 rounded px-2 py-1 text-xs text-white outline-none focus:border-blue-500" />
+            <span className="text-[9px] font-semibold uppercase tracking-wider text-app-text-secondary ml-1">New Reading</span>
+            <input name="newRead" onChange={handleChange} type="number" className="bg-app-card-from border border-app-card-border rounded px-2 py-1 text-xs text-app-text-primary outline-none focus:border-app-accent transition-colors" />
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-[9px] font-semibold uppercase tracking-wider text-gray-400 ml-1">Unit Charge</span>
-            <input name="elecRate" value={form.elecRate} onChange={handleChange} type="number" className="bg-slate-900 border border-slate-800 rounded px-2 py-1 text-xs text-white outline-none focus:border-blue-500" />
+            <span className="text-[9px] font-semibold uppercase tracking-wider text-app-text-secondary ml-1">Unit Charge</span>
+            <input name="elecRate" value={form.elecRate} onChange={handleChange} type="number" className="bg-app-card-from border border-app-card-border rounded px-2 py-1 text-xs text-app-text-primary outline-none focus:border-app-accent transition-colors" />
           </div>
         </div>
 
         {/* Row 5: Other Charges */}
         <div className='grid grid-cols-3 gap-3'>
           <div className="relative">
-            <Droplets className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-blue-400" />
-            <input name="water" onChange={handleChange} type="number" placeholder="Water" className="w-full bg-slate-900/90 border border-slate-800 focus:border-blue-500 pl-8 pr-2 py-1.5 rounded-lg text-xs text-white outline-none placeholder-gray-500" />
+            <Droplets className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-app-accent/60" />
+            <input name="water" onChange={handleChange} type="number" placeholder="Water" className="w-full bg-app-card-from border border-app-card-border focus:border-app-accent pl-8 pr-2 py-1.5 rounded-lg text-xs text-app-text-primary placeholder-app-text-muted outline-none transition-colors" />
           </div>
           <div className="relative">
-            <Trash2 className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-amber-400" />
-            <input name="trash" onChange={handleChange} type="number" placeholder="Trash" className="w-full bg-slate-900/90 border border-slate-800 focus:border-amber-500 pl-8 pr-2 py-1.5 rounded-lg text-xs text-white outline-none placeholder-gray-500" />
+            <Trash2 className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-app-danger/60" />
+            <input name="trash" onChange={handleChange} type="number" placeholder="Trash" className="w-full bg-app-card-from border border-app-card-border focus:border-app-danger pl-8 pr-2 py-1.5 rounded-lg text-xs text-app-text-primary placeholder-app-text-muted outline-none transition-colors" />
           </div>
           <div className="relative">
-            <Wallet className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-indigo-400" />
-            <input name="balance" onChange={handleChange} type="number" placeholder="Balance" className="w-full bg-slate-900/90 border border-slate-800 focus:border-indigo-500 pl-8 pr-2 py-1.5 rounded-lg text-xs text-white outline-none placeholder-gray-500" />
+            <Wallet className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-app-accent/60" />
+            <input name="balance" onChange={handleChange} type="number" placeholder="Balance" className="w-full bg-app-card-from border border-app-card-border focus:border-app-accent pl-8 pr-2 py-1.5 rounded-lg text-xs text-app-text-primary placeholder-app-text-muted outline-none transition-colors" />
           </div>
         </div>
       </div>
@@ -475,20 +475,20 @@ const RentCalculator = () => {
       {/* Save Action Sync Trigger */}
       <button 
         onClick={handleSaveReceipt}
-        className="mt-4 w-full bg-blue-600 hover:bg-blue-500 text-white py-2.5 rounded-xl font-medium text-xs transition-colors cursor-pointer shadow-lg shadow-blue-900/20"
+        className="mt-4 w-full bg-app-accent hover:bg-app-accent-hover text-white py-2.5 rounded-xl font-medium text-xs transition-colors cursor-pointer shadow-md"
       >
         Generate & Save
       </button>
 
       {/* Footer Total Summary Panel */}
-      <div className='pt-3 mt-4 border-t border-slate-900 flex justify-between items-center'>
-        <div className='text-gray-500 text-[11px] tracking-wide'>
-          Units: <span className='text-slate-300 font-semibold'>{electricityUnits}</span> | 
-          Elec: <span className='text-slate-300 font-semibold'>₹{electricityTotal}</span>
+      <div className='pt-3 mt-4 border-t border-app-card-border flex justify-between items-center transition-colors'>
+        <div className='text-app-text-muted text-[11px] tracking-wide'>
+          Units: <span className='text-app-text-primary font-semibold'>{electricityUnits}</span> | 
+          Elec: <span className='text-app-text-primary font-semibold'>₹{electricityTotal}</span>
         </div>
         <div className='text-right'>
-          <p className='text-[9px] font-semibold tracking-wider text-gray-500 uppercase leading-none mb-1'>Total Bill</p>
-          <p className='text-xl font-black text-blue-400 tracking-tight'>₹{totalBill.toLocaleString('en-IN')}</p>
+          <p className='text-[9px] font-semibold tracking-wider text-app-text-muted uppercase leading-none mb-1'>Total Bill</p>
+          <p className='text-xl font-black text-app-accent tracking-tight'>₹{totalBill.toLocaleString('en-IN')}</p>
         </div>
       </div>
     </div>

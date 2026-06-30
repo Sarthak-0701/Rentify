@@ -5,13 +5,13 @@ const OwnerSidebar = ({ isMobile, onClose }) => {
   const linkStyle = ({ isActive }) =>
     `w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all font-medium text-sm ${
       isActive
-        ? 'bg-blue-600/10 border border-blue-500/30 text-blue-400 shadow-md shadow-blue-950/20'
-        : 'text-gray-400 hover:bg-slate-900/50 hover:text-white border border-transparent'
+        ? 'bg-app-accent-glow border border-app-accent-border text-app-accent shadow-xs'
+        : 'text-app-text-secondary hover:bg-app-card-to hover:text-app-text-primary border border-transparent'
     }`;
 
   const containerClass = isMobile
     ? "flex flex-col h-full justify-between"
-    : "w-70 sticky top-19 h-[calc(100vh-76px)] bg-slate-950/40 border-r border-slate-900/60 py-6 pl-10 flex flex-col justify-between shrink-0 overflow-y-auto custom-scrollbar";
+    : "w-70 sticky top-19 h-full bg-app-sidebar-bg border-r border-app-sidebar-border py-6 pl-10 flex flex-col justify-between shrink-0 overflow-y-auto custom-scrollbar transition-colors";
 
   return (
     <div className={containerClass}>

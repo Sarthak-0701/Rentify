@@ -311,12 +311,12 @@ const TenantDashboard = () => {
     <div className="w-full flex flex-col gap-6 font-sans">
       {/* Top Banner Errors */}
       {error && (
-        <div className="p-4 bg-red-950/30 border border-red-900/40 rounded-xl flex items-center justify-between">
-          <p className="text-sm text-red-400 flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-red-500" />
+        <div className="p-4 bg-app-danger-glow border border-app-danger-border rounded-xl flex items-center justify-between">
+          <p className="text-sm text-app-danger flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4 text-app-danger" />
             {error}
           </p>
-          <button onClick={() => setError(null)} className="text-red-400 hover:text-red-300 cursor-pointer">
+          <button onClick={() => setError(null)} className="text-app-danger hover:text-app-danger/80 cursor-pointer">
             <X className="w-4 h-4" />
           </button>
         </div>

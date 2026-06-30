@@ -3,50 +3,50 @@ import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
-    <footer className="bg-black border-t border-slate-900 text-gray-400 font-sans">
+    <footer className="bg-app-bg border-t border-app-border text-app-text-secondary font-sans transition-colors">
       <div className="max-w-7xl mx-auto px-6 py-12 md:py-16">
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-slate-950">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-app-border">
 
           <div className="md:col-span-1 space-y-4">
-            <span className="text-2xl font-bold tracking-tight bg-linear-to-r from-blue-400 to-slate-200 bg-clip-text text-transparent">
+            <span className="text-2xl font-bold tracking-tight bg-linear-to-r from-blue-500 to-indigo-600 bg-clip-text text-transparent">
               Rentify.
             </span>
-            <p className="text-sm text-gray-500 leading-relaxed">
+            <p className="text-sm text-app-text-muted leading-relaxed">
               Simplifying the rental ecosystem with smart digital receipts, direct secure payments, and intuitive financial analytics.
             </p>
           </div>
 
           <div className="space-y-3">
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-white">Platform</h4>
+            <h4 className="text-sm font-semibold uppercase tracking-wider text-app-text-primary">Platform</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="hover:text-blue-400 transition-colors">Home</Link></li>
-              <li><Link to="/About" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="hover:text-blue-400 transition-colors">About Us</Link></li>
-              <li><Link to="/owner-dashboard" className="hover:text-blue-400 transition-colors">Owner Dashboard</Link></li>
-              <li><Link to="/tenant-dashboard" className="hover:text-blue-400 transition-colors">Tenant Portal</Link></li>
+              <li><Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="hover:text-app-accent transition-colors">Home</Link></li>
+              <li><Link to="/About" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="hover:text-app-accent transition-colors">About Us</Link></li>
+              <li><Link to="/owner-dashboard" className="hover:text-app-accent transition-colors">Owner Dashboard</Link></li>
+              <li><Link to="/tenant-dashboard" className="hover:text-app-accent transition-colors">Tenant Portal</Link></li>
             </ul>
           </div>
 
           <div className="space-y-3">
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-white">Support & Legal</h4>
+            <h4 className="text-sm font-semibold uppercase tracking-wider text-app-text-primary">Support & Legal</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/contact" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="hover:text-blue-400 transition-colors">Contact Support</Link></li>
-              <li><Link to="/terms" className="hover:text-blue-400 transition-colors">Terms of Service</Link></li>
-              <li><Link to="/privacy" className="hover:text-blue-400 transition-colors">Privacy Policy</Link></li>
-              <li><Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="hover:text-blue-400 transition-colors">Tax & Compliance</Link></li>
+              <li><Link to="/contact" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="hover:text-app-accent transition-colors">Contact Support</Link></li>
+              <li><Link to="/terms" className="hover:text-app-accent transition-colors">Terms of Service</Link></li>
+              <li><Link to="/privacy" className="hover:text-app-accent transition-colors">Privacy Policy</Link></li>
+              <li><Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="hover:text-app-accent transition-colors">Tax & Compliance</Link></li>
             </ul>
           </div>
 
           <div className="space-y-3">
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-white">Stay Updated</h4>
-            <p className="text-xs text-gray-500">Subscribe for platform tax-guidelines and update alerts.</p>
+            <h4 className="text-sm font-semibold uppercase tracking-wider text-app-text-primary">Stay Updated</h4>
+            <p className="text-xs text-app-text-muted">Subscribe for platform tax-guidelines and update alerts.</p>
             <div className="flex gap-2 max-w-sm">
               <input 
                 type="email" 
                 placeholder="Enter email" 
-                className="w-full bg-slate-950 border border-slate-900 rounded-lg px-3 py-2 text-xs text-white focus:border-blue-500 outline-none transition-colors"
+                className="w-full bg-app-card-from border border-app-card-border rounded-lg px-3 py-2 text-xs text-app-text-primary focus:border-app-accent outline-none transition-colors"
               />
-              <button className="bg-slate-900 border border-slate-800 hover:bg-slate-800 text-white text-xs font-medium px-4 py-2 rounded-lg transition-colors">
+              <button className="bg-app-card-to border border-app-card-border hover:bg-app-card-hover/20 text-app-text-primary text-xs font-medium px-4 py-2 rounded-lg transition-colors cursor-pointer">
                 Join
               </button>
             </div>
@@ -58,8 +58,8 @@ const Footer = () => {
           
           <div className="text-center sm:text-left space-y-1">
             <p>© {new Date().getFullYear()} Rentify. All rights reserved.</p>
-            <p className="text-gray-600">
-              Designed & Developed by <span className="text-slate-300 font-medium">Sarthak Shukla</span>
+            <p className="text-app-text-muted">
+              Designed & Developed by <span className="text-app-text-primary font-medium">Sarthak Shukla</span>
             </p>
           </div>
 
@@ -69,7 +69,7 @@ const Footer = () => {
               href="https://github.com" 
               target="_blank" 
               rel="noreferrer" 
-              className="text-gray-500 hover:text-white transition-colors p-1"
+              className="text-app-text-muted hover:text-app-text-primary transition-colors p-1"
               aria-label="GitHub"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
@@ -82,7 +82,7 @@ const Footer = () => {
               href="https://linkedin.com" 
               target="_blank" 
               rel="noreferrer" 
-              className="text-gray-500 hover:text-blue-500 transition-colors p-1"
+              className="text-app-text-muted hover:text-app-accent transition-colors p-1"
               aria-label="LinkedIn"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
@@ -95,11 +95,11 @@ const Footer = () => {
               href="https://instagram.com" 
               target="_blank" 
               rel="noreferrer" 
-              className="text-gray-500 hover:text-pink-500 transition-colors p-1"
+              className="text-app-text-muted hover:text-pink-500 transition-colors p-1"
               aria-label="Instagram"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845a1.44 1.44 0 100-2.881 1.44 1.44 0 000 2.881z"/>
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0 3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845a1.44 1.44 0 100-2.881 1.44 1.44 0 000 2.881z"/>
               </svg>
             </a>
           </div>
