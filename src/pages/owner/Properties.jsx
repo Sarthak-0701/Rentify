@@ -41,6 +41,24 @@ const Properties = () => {
     baseRent: ''
   });
 
+  const [toast, setToast] = useState(null); // { message: '' }
+
+  const handleCopyCode = (e, code, roomNum, propName, tenantName) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(code)
+      .then(() => {
+        setToast({
+          message: `Copied ID: ${code} for Room ${roomNum} (${propName}) - Tenant: ${tenantName || 'Vacant'}`
+        });
+        setTimeout(() => {
+          setToast(null);
+        }, 3000);
+      })
+      .catch((err) => {
+        console.error("Failed to copy code: ", err);
+      });
+  };
+
   // Fetch properties
   const fetchProperties = async () => {
     if (!user) return;
@@ -300,7 +318,11 @@ const Properties = () => {
                                 <User className="w-2.5 h-2.5" /> {room.tenant_name}
                               </span>
                               {room.tenant_code && (
-                                <span className="text-[9px] bg-app-card-to text-app-text-secondary px-1.5 py-0.5 rounded font-mono border border-app-card-border">
+                                <span 
+                                  onClick={(e) => handleCopyCode(e, room.tenant_code, room.room_number, property.name, room.tenant_name)}
+                                  className="text-[9px] bg-app-card-to hover:bg-app-accent-glow hover:text-app-accent hover:border-app-accent-border px-1.5 py-0.5 rounded font-mono border border-app-card-border cursor-pointer transition-colors"
+                                  title="Click to copy Room Code"
+                                >
                                   ID: {room.tenant_code}
                                 </span>
                               )}
@@ -548,6 +570,20 @@ const Properties = () => {
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Premium Toast Popup Notification */}
+      {toast && (
+        <div 
+          className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-3 bg-app-bg border border-app-accent-border rounded-xl shadow-2xl transition-all select-none"
+          style={{
+            animation: 'toastSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            borderLeft: '4px solid var(--accent-color)'
+          }}
+        >
+          <div className="w-2 h-2 rounded-full bg-app-accent animate-ping shrink-0" />
+          <p className="text-xs text-app-text-primary font-medium leading-relaxed">{toast.message}</p>
         </div>
       )}
     </div>

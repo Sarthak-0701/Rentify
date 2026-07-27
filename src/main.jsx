@@ -20,6 +20,7 @@ import ReceiptHistory from './pages/owner/ReceiptHistory'
 import TenantRentHistory from './pages/tenant/TenantRentHistory'
 import { PrivacyPolicy, TermsAndServices } from './pages/LegalDox'
 import { useThemeStore } from './supabase/store/ThemeStore'
+import NotFound from './pages/NotFound'
 
 const MainApp = () => {
   const initializeAuth = useAuthStore((state) => state.initializeAuth);
@@ -39,7 +40,8 @@ const MainApp = () => {
         { path: 'about', element: <About /> },
         { path: 'contact', element: <Contact /> },
         { path: 'terms' , element: <TermsAndServices />},
-        { path: 'privacy' , element: <PrivacyPolicy/> }
+        { path: 'privacy' , element: <PrivacyPolicy/> },
+        { path: '*', element: <NotFound /> }
       ]
     },
     { 
@@ -85,6 +87,10 @@ const MainApp = () => {
           ]
         }
       ]
+    },
+    {
+      path: '*',
+      element: <NotFound />
     }
   ]);
 

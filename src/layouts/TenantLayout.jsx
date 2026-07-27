@@ -15,7 +15,7 @@ const TenantLayout = () => {
 
       <div className="grow flex w-full items-stretch relative">
         {/* Background emerald radial glow */}
-        <div className="absolute top-10 left-64 -z-10 w-96 h-96 bg-emerald-500/5 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute top-10 left-64 -z-10 w-96 h-96 bg-emerald-500/5 blur-[120px] rounded-full pointer-events-none hidden lg:block" />
 
         {/* Desktop Sidebar (hidden on mobile) */}
         <div className="hidden lg:block self-stretch shrink-0">

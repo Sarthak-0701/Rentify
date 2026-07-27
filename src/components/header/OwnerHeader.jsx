@@ -70,7 +70,7 @@ const OwnerHeader = ({ onToggleSidebar }) => {
           title="Sign Out"
         >
           <LogOut className="w-3.5 h-3.5" />
-          <span>Sign Out</span>
+          <span className="hidden sm:inline">Sign Out</span>
         </button>
       </div>
     </nav>

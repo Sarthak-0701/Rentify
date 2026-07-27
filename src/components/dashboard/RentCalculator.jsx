@@ -156,13 +156,15 @@ const RentCalculator = () => {
     }
   }, [profile]);
 
-  // 1. Fetch properties on component mount
+  // 1. Fetch properties on component mount or when user changes
   useEffect(() => {
     const fetchProperties = async () => {
+      if (!user?.id) return;
       try {
         const { data, error } = await supabase
           .from('properties')
-          .select('id, name');
+          .select('id, name')
+          .eq('owner_id', user.id);
         if (error) throw error;
         setProperties(data || []);
       } catch (err) {
@@ -170,7 +172,7 @@ const RentCalculator = () => {
       }
     };
     fetchProperties();
-  }, []);
+  }, [user]);
 
   // 2. Fetch rooms when property selection changes
   useEffect(() => {
@@ -327,11 +329,13 @@ const RentCalculator = () => {
     }
   };
 
+  const isFormIncomplete = !selectedPropertyId || !selectedRoomId || !form.date;
+
   return (
     <>
       <div 
         ref={receiptRef}
-        className='h-full w-full max-w-md bg-linear-to-b from-app-card-from to-app-card-to border border-app-card-border p-5 rounded-2xl shadow-2xl text-app-text-primary flex flex-col justify-between relative overflow-hidden transition-colors'
+        className='h-auto sm:h-full w-full max-w-md bg-linear-to-b from-app-card-from to-app-card-to border border-app-card-border p-5 rounded-2xl shadow-2xl text-app-text-primary flex flex-col justify-between relative overflow-hidden transition-colors'
       >
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-px bg-linear-to-r from-transparent via-app-accent/30 to-transparent" />
       
@@ -340,14 +344,16 @@ const RentCalculator = () => {
         <div className="flex items-center gap-1">
           <button 
             onClick={handleShare}
-            className="p-1.5 hover:bg-app-card-hover/20 text-app-text-secondary hover:text-app-text-primary rounded-lg transition-colors cursor-pointer"
+            disabled={isFormIncomplete}
+            className="p-1.5 text-app-text-secondary hover:text-app-text-primary hover:bg-app-card-hover/20 rounded-lg transition-colors cursor-pointer disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary disabled:cursor-not-allowed"
             title="Share Receipt"
           >
             <Share2 className="h-4 w-4" />
           </button>
           <button 
             onClick={downloadReceiptImage}
-            className="p-1.5 hover:bg-app-card-hover/20 text-app-text-secondary hover:text-app-text-primary rounded-lg transition-colors cursor-pointer"
+            disabled={isFormIncomplete}
+            className="p-1.5 text-app-text-secondary hover:text-app-text-primary hover:bg-app-card-hover/20 rounded-lg transition-colors cursor-pointer disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-app-text-secondary disabled:cursor-not-allowed"
             title="Download Receipt PNG"
           >
             <Download className="h-4 w-4" />
@@ -355,7 +361,7 @@ const RentCalculator = () => {
         </div>
       </div>
       
-      <div className='flex-1 space-y-3.5 overflow-y-auto pr-1 select-custom-scroll'>
+      <div className='flex-1 space-y-3.5 overflow-visible sm:overflow-y-auto pr-1 select-custom-scroll'>
         {/* Row 1: Property & Room Selection Dropdowns */}
         <div className='grid grid-cols-2 gap-3'>
           <div className="relative">
