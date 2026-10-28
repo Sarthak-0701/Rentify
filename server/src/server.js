@@ -1,8 +1,10 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import dotenv from 'dotenv';
 import { redis } from './config/redis.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
@@ -10,7 +12,6 @@ import propertyRoutes from './routes/propertyRoutes.js';
 import receiptRoutes from './routes/receiptRoutes.js';
 import tenancyRoutes from './routes/tenancyRoutes.js'; 
 
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
