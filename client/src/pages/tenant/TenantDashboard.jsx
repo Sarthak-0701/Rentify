@@ -53,121 +53,71 @@ const TenantDashboard = () => {
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [cardDetails, setCardDetails] = useState({ number: '', expiry: '', cvv: '' });
 
-  // 1. Load tenant codes and data
-  useEffect(() => {
-    const initializeDashboard = async () => {
-      if (!user) return;
-      try {
-        setLoading(true);
-        setError(null);
-
-        // Fetch DB profile codes
-        const dbCodesStr = profile?.tenant_code || '';
-        const dbCodes = dbCodesStr
-          ? dbCodesStr.split(',').map((c) => c.trim()).filter(Boolean)
-          : [];
-
-        // Fetch LocalStorage codes (fallback)
-        const localStr = localStorage.getItem(`rentify_tenant_codes_${user.id}`);
-        const localCodes = localStr ? JSON.parse(localStr) : [];
-
-        // Merge and cap at 5
-        const mergedCodes = Array.from(new Set([...dbCodes, ...localCodes])).slice(0, 5);
-        setLinkedCodes(mergedCodes);
-
-        await fetchTenantDetails(mergedCodes);
-      } catch (err) {
-        console.error('Error initializing dashboard:', err);
-        setError('Failed to load portal configuration.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    initializeDashboard();
-  }, [user, profile]);
-
-  const fetchTenantDetails = async (codes) => {
-    if (!codes || codes.length === 0) {
-      setRooms([]);
-      setReceipts([]);
-      setOwners({});
-      return;
-    }
+  // 1. Load active rentals and statements directly from DB
+  const fetchDashboardData = async () => {
+    if (!user) return;
     try {
-      const data = await rentalService.getTenantData(codes);
-      setRooms(data.rooms || []);
-      setReceipts(data.receipts || []);
-      setOwners(data.owners || {});
+      setLoading(true);
+      setError(null);
+
+      const [rentalsData, receiptsData] = await Promise.all([
+        rentalService.getTenantActiveRentals(),
+        rentalService.getReceipts(1, 100),
+      ]);
+
+      const activeRentals = rentalsData || [];
+      setRooms(activeRentals);
+      setLinkedCodes(activeRentals.map((r) => r.tenant_code).filter(Boolean));
+      setReceipts(receiptsData || []);
+
+      const ownerMap = {};
+      activeRentals.forEach((r) => {
+        if (r.properties?.owner_id) {
+          ownerMap[r.properties.owner_id] = r.properties.owner_name || 'Landlord';
+        }
+      });
+      setOwners(ownerMap);
     } catch (err) {
-      console.error('Error fetching tenant data:', err);
-      setError('Failed to sync rental details from database.');
+      console.error('Error initializing dashboard:', err);
+      setError('Failed to load rental details.');
+    } finally {
+      setLoading(false);
     }
   };
 
-  // 2. Link code
+  useEffect(() => {
+    fetchDashboardData();
+  }, [user]);
+
+  // 2. Link room by submitting invite code request to landlord
   const handleLinkRoom = async (e) => {
     e.preventDefault();
     setError(null);
-    const cleanedCode = tenantCodeInput.trim();
+    const cleanedCode = tenantCodeInput.trim().toUpperCase();
 
-    if (!cleanedCode || cleanedCode.length !== 6) {
-      setError('Please enter a valid 6-digit Tenant Code.');
-      return;
-    }
+    if (!cleanedCode) return;
 
     if (linkedCodes.includes(cleanedCode)) {
-      setError('This rental is already linked.');
-      return;
-    }
-
-    if (linkedCodes.length >= 5) {
-      setError('Maximum limit of 5 active rentals reached.');
+      setError('You are already linked to this rental room.');
       return;
     }
 
     try {
       setLinkLoading(true);
-      // Verify code
-      const verified = await rentalService.getTenantData([cleanedCode]);
-      if (!verified.rooms || verified.rooms.length === 0) {
-        setError('No active room found with this Tenant Code. Please verify the code.');
-        setLinkLoading(false);
-        return;
-      }
-
-      const updatedCodes = [...linkedCodes, cleanedCode];
-      setLinkedCodes(updatedCodes);
-      localStorage.setItem(`rentify_tenant_codes_${user.id}`, JSON.stringify(updatedCodes));
-      await rentalService.syncTenantCodes(user.id, updatedCodes);
-
-      await fetchTenantDetails(updatedCodes);
+      const res = await rentalService.requestTenancyLink(cleanedCode);
       setTenantCodeInput('');
+      alert(res.message || 'Room link request submitted! The owner will review your application.');
     } catch (err) {
-      console.error('Error linking code:', err);
-      setError('Could not verify room code.');
+      console.error('Error requesting room link:', err);
+      setError(err.message || 'Failed to submit room invite code.');
     } finally {
       setLinkLoading(false);
     }
   };
 
-  // 3. Unlink code
+  // 3. Refresh data handler
   const handleUnlinkRoom = async (codeToUnlink) => {
-    setError(null);
-    try {
-      setLoading(true);
-      const updatedCodes = linkedCodes.filter((c) => c !== codeToUnlink);
-      setLinkedCodes(updatedCodes);
-      localStorage.setItem(`rentify_tenant_codes_${user.id}`, JSON.stringify(updatedCodes));
-      await rentalService.syncTenantCodes(user.id, updatedCodes);
-
-      await fetchTenantDetails(updatedCodes);
-    } catch (err) {
-      console.error('Error unlinking room:', err);
-      setError('Failed to unlink property.');
-    } finally {
-      setLoading(false);
-    }
+    alert("To unlink from an active room, please contact your landlord.");
   };
 
   // 4. Download / Share statement
@@ -304,7 +254,11 @@ const TenantDashboard = () => {
 
   const getExportRoom = () => {
     if (!selectedReceiptForExport) return null;
-    return rooms.find((r) => r.id === selectedReceiptForExport.room_id);
+    return rooms.find((r) => (
+      r.id === selectedReceiptForExport.room_id ||
+      r.tenancy_id === selectedReceiptForExport.tenancy_id ||
+      r.id === selectedReceiptForExport.tenancies?.room_id
+    ));
   };
 
   return (

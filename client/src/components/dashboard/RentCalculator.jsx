@@ -128,6 +128,7 @@ import { User, Home, Calendar, Zap, Droplets, Trash2, Wallet, Banknote, Download
 import html2canvas from 'html2canvas';
 import { supabase } from '../../supabase/client';
 import { useAuthStore } from '../../supabase/store/AuthStore';
+import { rentalService } from '../../supabase/services/rentalServices';
 
 const RentCalculator = () => {
   const receiptRef = useRef(null);
@@ -161,11 +162,7 @@ const RentCalculator = () => {
     const fetchProperties = async () => {
       if (!user?.id) return;
       try {
-        const { data, error } = await supabase
-          .from('properties')
-          .select('id, name')
-          .eq('owner_id', user.id);
-        if (error) throw error;
+        const data = await rentalService.getProperties();
         setProperties(data || []);
       } catch (err) {
         console.error('Error fetching properties:', err.message);
@@ -174,26 +171,15 @@ const RentCalculator = () => {
     fetchProperties();
   }, [user]);
 
-  // 2. Fetch rooms when property selection changes
+  // 2. Set rooms when property selection changes
   useEffect(() => {
     if (!selectedPropertyId) {
       setRooms([]);
       return;
     }
-    const fetchRooms = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('rooms')
-          .select('id, room_number, tenant_name, tenant_code, base_rent')
-          .eq('property_id', selectedPropertyId);
-        if (error) throw error;
-        setRooms(data || []);
-      } catch (err) {
-        console.error('Error fetching rooms:', err.message);
-      }
-    };
-    fetchRooms();
-  }, [selectedPropertyId]);
+    const prop = properties.find((p) => p.id === selectedPropertyId);
+    setRooms(prop?.rooms || []);
+  }, [selectedPropertyId, properties]);
 
   const handlePropertyChange = (e) => {
     const propId = e.target.value;
@@ -228,7 +214,7 @@ const RentCalculator = () => {
                     (parseFloat(form.water) || 0) + (parseFloat(form.trash) || 0) + 
                     (parseFloat(form.balance) || 0);
 
-  // 3. Save Calculated Receipt Parameters to Supabase
+  // 3. Save Calculated Receipt Parameters to Supabase via backend API
   const handleSaveReceipt = async () => {
     if (!selectedPropertyId || !selectedRoomId || !form.date) {
       alert("Please ensure property, room, and billing date are selected.");
@@ -236,34 +222,26 @@ const RentCalculator = () => {
     }
 
     const targetRoom = rooms.find(r => r.id === selectedRoomId);
+    if (!targetRoom?.tenancy_id) {
+      alert("No active tenancy found for this room to attach the receipt to.");
+      return;
+    }
 
     try {
-      const { data, error } = await supabase
-        .from('receipts')
-        .insert([
-          {
-            property_id: selectedPropertyId,
-            room_id: selectedRoomId,
-            owner_id: user?.id || profile?.id,
-            tenant_name: targetRoom?.tenant_name || null,
-            tenant_code: targetRoom?.tenant_code || null,
-            billing_date: form.date,
-            base_rent: form.baseRent,
-            old_reading: form.oldRead,
-            new_reading: form.newRead,
-            electricity_rate: form.elecRate,
-            water_charges: form.water,
-            trash_charges: form.trash,
-            previous_balance: form.balance,
-            total_bill: totalBill,
-            status: 'Pending'
-          }
-        ]);
+      await rentalService.createReceipt({
+        tenancy_id: targetRoom.tenancy_id,
+        billing_date: form.date,
+        old_reading: Number(form.oldRead) || 0,
+        new_reading: Number(form.newRead) || 0,
+        electricity_rate: Number(form.elecRate) || 0,
+        water_charges: Number(form.water) || 0,
+        trash_charges: Number(form.trash) || 0,
+        previous_balance: Number(form.balance) || 0,
+      });
 
-      if (error) throw error;
       alert("Receipt saved and synced to the database successfully!");
     } catch (err) {
-      alert("Failed to save receipt: " + err.message);
+      alert("Failed to save receipt: " + (err.response?.data?.error || err.message));
     }
   };
 

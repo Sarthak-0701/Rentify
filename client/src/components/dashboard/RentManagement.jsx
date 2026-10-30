@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuthStore } from '../../supabase/store/AuthStore';
-import { rentalService } from '../../supabase/services/rentalServices';
+import { rentalService } from '../../supabase/services/rentalServices.js';
 import { 
   Building, 
   Users, 
@@ -14,6 +14,7 @@ import {
 
 const RentManagement = () => {
   const user = useAuthStore((state) => state.user);
+  const authLoading = useAuthStore((state) => state.loading);
 
   // States
   const [properties, setProperties] = useState([]);
@@ -21,25 +22,28 @@ const RentManagement = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = useCallback(async () => {
     if (!user) return;
     try {
       setLoading(true);
       setError(null);
-      const data = await rentalService.getOwnerDashboardStats(user.id);
-      setProperties(data.properties || []);
-      setReceipts(data.receipts || []);
+      const data = await rentalService.getOwnerDashboardStats();
+      setProperties(data?.properties || []);
+      setReceipts(data?.receipts || []);
     } catch (err) {
       console.error('Error loading dashboard stats:', err);
       setError('Failed to load dashboard metrics. Please reload.');
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
 
   useEffect(() => {
-    fetchDashboardData();
-  }, [user]);
+    // Only query backend after Supabase auth hydration is complete and user exists
+    if (!authLoading && user?.id) {
+      fetchDashboardData();
+    }
+  }, [user?.id, authLoading, fetchDashboardData]);
 
   // Compute Overall stats
   const totalProperties = properties.length;
@@ -47,22 +51,25 @@ const RentManagement = () => {
   let totalRooms = 0;
   let totalTenants = 0;
   properties.forEach(p => {
-    if (p.rooms) {
+    if (Array.isArray(p.rooms)) {
       totalRooms += p.rooms.length;
-      totalTenants += p.rooms.filter(r => r.tenant_name && r.tenant_name.trim() !== '').length;
+      totalTenants += p.rooms.filter(r => Boolean(r.is_occupied || (r.tenant_name && r.tenant_name.trim() !== ''))).length;
     }
   });
 
-  const overallOccupancy = totalRooms > 0 ? Math.round((totalTenants / totalRooms) * 105) : 0;
-  const cappedOccupancy = Math.min(100, overallOccupancy); // Cap at 100%
+  const overallOccupancy = totalRooms > 0 ? Math.round((totalTenants / totalRooms) * 100) : 0;
+  const cappedOccupancy = Math.min(100, overallOccupancy);
+
+  // Helper to check case-insensitive payment status
+  const isPaid = (status) => typeof status === 'string' && status.toLowerCase() === 'paid';
 
   // Financial aggregates
   const totalRevenue = receipts
-    .filter(r => r.status === 'Paid')
+    .filter(r => isPaid(r.status))
     .reduce((sum, r) => sum + (Number(r.total_bill) || 0), 0);
 
   const duePayments = receipts
-    .filter(r => r.status !== 'Paid')
+    .filter(r => !isPaid(r.status))
     .reduce((sum, r) => sum + (Number(r.total_bill) || 0), 0);
 
   const estimatedRevenue = receipts.reduce((sum, r) => sum + (Number(r.total_bill) || 0), 0);
@@ -187,9 +194,7 @@ const RentManagement = () => {
               key={idx} 
               className={`p-5 border rounded-2xl flex items-center justify-between shadow-xl relative overflow-hidden group transition-all ${card.styleClass}`}
             >
-              {/* Colored Glassmorphic Overlay */}
               <div className={`absolute inset-0 pointer-events-none transition-all duration-300 ${card.overlayClass}`} />
-
               <div className={`absolute top-0 left-0 right-0 h-0.5 ${card.lineClass} z-10`} />
               
               <div className="space-y-1 select-none z-10">
@@ -230,21 +235,22 @@ const RentManagement = () => {
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {properties.map((prop) => {
-              const propRooms = prop.rooms || [];
+              const propRooms = Array.isArray(prop.rooms) ? prop.rooms : [];
               const propRoomsCount = propRooms.length;
-              const propTenantsCount = propRooms.filter(r => r.tenant_name && r.tenant_name.trim() !== '').length;
+              const propTenantsCount = propRooms.filter(r => Boolean(r.is_occupied || (r.tenant_name && r.tenant_name.trim() !== ''))).length;
               const propOccupancy = propRoomsCount > 0 ? Math.round((propTenantsCount / propRoomsCount) * 100) : 0;
               
-              // Filter receipts associated with this property
-              const propReceipts = receipts.filter(r => r.property_id === prop.id);
+              // Inspect direct or nested property relationships
+              const propReceipts = receipts.filter(r => 
+                r.property_id === prop.id || r.tenancies?.property_id === prop.id
+              );
               
-              // Compute property level revenue divisions
               const propCollected = propReceipts
-                .filter(r => r.status === 'Paid')
+                .filter(r => isPaid(r.status))
                 .reduce((sum, r) => sum + (Number(r.total_bill) || 0), 0);
 
               const propDue = propReceipts
-                .filter(r => r.status !== 'Paid')
+                .filter(r => !isPaid(r.status))
                 .reduce((sum, r) => sum + (Number(r.total_bill) || 0), 0);
 
               const propEstimated = propReceipts.reduce((sum, r) => sum + (Number(r.total_bill) || 0), 0);

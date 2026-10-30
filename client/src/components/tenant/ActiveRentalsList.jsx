@@ -42,17 +42,17 @@ const ActiveRentalsList = ({
                 
                 <div className="space-y-0.5 border-l border-app-card-border pl-2.5">
                   <div className="text-[10px] text-app-text-secondary">
-                    Landlord: <span className="font-semibold text-app-text-primary">{owners[room.properties?.owner_id] || 'Owner'}</span>
+                    Landlord: <span className="font-semibold text-app-text-primary">{room.properties?.owner_name || owners[room.properties?.owner_id] || 'Landlord'}</span>
                   </div>
                   <div className="text-[10px] text-app-text-secondary">
-                    Base Rent: <span className="font-semibold text-app-tenant-accent">₹{room.base_rent?.toLocaleString('en-IN')}</span>
+                    Base Rent: <span className="font-semibold text-app-tenant-accent">₹{Number(room.base_rent || 0).toLocaleString('en-IN')}</span>
                   </div>
                 </div>
               </div>
 
               <div className="flex flex-col items-end gap-3">
                 <span className="text-[10px] bg-app-card-to text-app-text-secondary border border-app-card-border px-2 py-0.5 rounded font-mono">
-                  Code: {room.tenant_code}
+                  Code: {room.tenant_code || room.invite_code}
                 </span>
                 
                 <button

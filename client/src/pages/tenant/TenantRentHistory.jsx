@@ -40,7 +40,7 @@ const TenantRentHistory = () => {
   // Export states
   const [selectedReceiptForExport, setSelectedReceiptForExport] = useState(null);
 
-  // 1. Initial Load: Load tenant codes and details
+  // 1. Initial Load: Load tenant active rentals and receipts
   useEffect(() => {
     const initializeRentHistory = async () => {
       if (!user) return;
@@ -48,27 +48,23 @@ const TenantRentHistory = () => {
         setLoading(true);
         setError(null);
 
-        // Fetch DB profile codes
-        const dbCodesStr = profile?.tenant_code || '';
-        const dbCodes = dbCodesStr
-          ? dbCodesStr.split(',').map((c) => c.trim()).filter(Boolean)
-          : [];
+        const [rentalsData, receiptsData] = await Promise.all([
+          rentalService.getTenantActiveRentals(),
+          rentalService.getReceipts(1, 100),
+        ]);
 
-        // Fetch LocalStorage codes (as a robust fallback)
-        const localStr = localStorage.getItem(`rentify_tenant_codes_${user.id}`);
-        const localCodes = localStr ? JSON.parse(localStr) : [];
+        const activeRentals = rentalsData || [];
+        setRooms(activeRentals);
+        setLinkedCodes(activeRentals.map((r) => r.tenant_code).filter(Boolean));
+        setReceipts(receiptsData || []);
 
-        // Merge, filter unique, and cap at 5
-        const mergedCodes = Array.from(new Set([...dbCodes, ...localCodes])).slice(0, 5);
-        setLinkedCodes(mergedCodes);
-
-        // Fetch properties/rooms/statements
-        if (mergedCodes.length > 0) {
-          const data = await rentalService.getTenantData(mergedCodes);
-          setRooms(data.rooms || []);
-          setReceipts(data.receipts || []);
-          setOwners(data.owners || {});
-        }
+        const ownerMap = {};
+        activeRentals.forEach((r) => {
+          if (r.properties?.owner_id) {
+            ownerMap[r.properties.owner_id] = r.properties.owner_name || 'Landlord';
+          }
+        });
+        setOwners(ownerMap);
       } catch (err) {
         console.error('Error loading history:', err);
         setError('Failed to load transaction history.');
@@ -78,7 +74,7 @@ const TenantRentHistory = () => {
     };
 
     initializeRentHistory();
-  }, [user, profile]);
+  }, [user]);
 
   // 2. Download / Share functionality
   const triggerExport = (receipt, action) => {
@@ -88,7 +84,7 @@ const TenantRentHistory = () => {
 
   const executeDownload = async (receipt) => {
     if (!exportReceiptRef.current) return;
-    const room = rooms.find((r) => r.id === receipt.room_id);
+    const room = rooms.find((r) => r.id === receipt.room_id || r.tenancy_id === receipt.tenancy_id || r.id === receipt.tenancies?.room_id);
     try {
       const canvas = await html2canvas(exportReceiptRef.current, {
         backgroundColor: '#030712',
@@ -108,7 +104,7 @@ const TenantRentHistory = () => {
 
   const executeShare = async (receipt) => {
     if (!exportReceiptRef.current) return;
-    const room = rooms.find((r) => r.id === receipt.room_id);
+    const room = rooms.find((r) => r.id === receipt.room_id || r.tenancy_id === receipt.tenancy_id || r.id === receipt.tenancies?.room_id);
     try {
       const canvas = await html2canvas(exportReceiptRef.current, {
         backgroundColor: '#030712',
@@ -178,7 +174,7 @@ const TenantRentHistory = () => {
 
   const getExportRoom = () => {
     if (!selectedReceiptForExport) return null;
-    return rooms.find((r) => r.id === selectedReceiptForExport.room_id);
+    return rooms.find((r) => r.id === selectedReceiptForExport.room_id || r.tenancy_id === selectedReceiptForExport.tenancy_id || r.id === selectedReceiptForExport.tenancies?.room_id);
   };
 
   return (
@@ -244,7 +240,11 @@ const TenantRentHistory = () => {
           {rooms.map((room) => {
             // Filter receipts for this specific room, and only show the latest 3
             const roomReceipts = receipts
-              .filter((r) => r.room_id === room.id)
+              .filter((r) => (
+                r.room_id === room.id || 
+                r.tenancy_id === room.tenancy_id || 
+                r.tenancies?.room_id === room.id
+              ))
               .slice(0, 3);
 
             return (
@@ -276,8 +276,9 @@ const TenantRentHistory = () => {
                 ) : (
                   <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                     {roomReceipts.map((receipt) => {
-                      const electricityUnits = Math.max(0, receipt.new_reading - receipt.old_reading);
-                      const electricityTotal = electricityUnits * receipt.electricity_rate;
+                      const electricityUnits = Math.max(0, Number(receipt.new_reading || 0) - Number(receipt.old_reading || 0));
+                      const electricityTotal = electricityUnits * Number(receipt.electricity_rate || 0);
+                      const isPaid = receipt.status?.toLowerCase() === 'paid';
 
                       return (
                         <div 
@@ -296,11 +297,11 @@ const TenantRentHistory = () => {
                                 <h4 className="text-sm font-bold text-app-text-primary mt-0.5">{receipt.billing_date}</h4>
                               </div>
                               <span className={`text-[9px] px-2.5 py-0.5 rounded-full font-bold border ${
-                                receipt.status === 'Paid' 
+                                isPaid 
                                   ? 'bg-app-tenant-accent-glow text-app-tenant-accent border-app-tenant-accent-border' 
                                   : 'bg-amber-500/10 text-amber-500 border border-amber-500/20'
                               }`}>
-                                {receipt.status || 'Pending'}
+                                {isPaid ? 'Paid' : 'Unpaid'}
                               </span>
                             </div>
 

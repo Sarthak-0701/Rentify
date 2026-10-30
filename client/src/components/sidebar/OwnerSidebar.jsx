@@ -24,6 +24,10 @@ const OwnerSidebar = ({ isMobile, onClose }) => {
           <span>Manage Properties</span>
         </NavLink>
 
+        <NavLink to="/owner-dashboard/pending-requests" className={linkStyle} onClick={isMobile ? onClose : undefined}>
+          <span>Pending Requests</span>
+        </NavLink>
+
         <NavLink to="/owner-dashboard/calculator" className={linkStyle} onClick={isMobile ? onClose : undefined}>
           <span>Rent Calculator</span>
         </NavLink>

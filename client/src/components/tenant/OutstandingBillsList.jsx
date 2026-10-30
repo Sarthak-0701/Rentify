@@ -13,7 +13,11 @@ const OutstandingBillsList = ({
     const list = [];
     rooms.forEach((room) => {
       const roomPending = receipts
-        .filter((r) => r.room_id === room.id && r.status === 'Pending')
+        .filter((r) => {
+          const isTargetRoom = r.room_id === room.id || r.tenancies?.room_id === room.id;
+          const isUnpaid = r.status?.toLowerCase() === 'unpaid' || r.status?.toLowerCase() === 'pending';
+          return isTargetRoom && isUnpaid;
+        })
         .sort((a, b) => new Date(b.billing_date) - new Date(a.billing_date));
       
       if (roomPending.length > 0) {
@@ -45,8 +49,8 @@ const OutstandingBillsList = ({
       ) : (
         <div className="space-y-4">
           {outstandingBills.map((receipt) => {
-            const room = rooms.find((r) => r.id === receipt.room_id);
-            const ownerName = owners[room?.properties?.owner_id] || 'Owner';
+            const room = rooms.find((r) => r.id === receipt.room_id || r.tenancy_id === receipt.tenancy_id || r.id === receipt.tenancies?.room_id);
+            const ownerName = room?.properties?.owner_name || owners[room?.properties?.owner_id] || 'Owner';
             
             return (
               <div

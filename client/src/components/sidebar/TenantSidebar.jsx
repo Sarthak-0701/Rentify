@@ -24,6 +24,10 @@ const TenantSidebar = ({ isMobile, onClose }) => {
           <span>Rent History</span>
         </NavLink>
         
+        <NavLink to="/tenant-dashboard/requests" className={linkStyle} onClick={isMobile ? onClose : undefined}>
+          <span>Requests</span>
+        </NavLink>
+        
         <NavLink to="/tenant-dashboard/about" className={linkStyle} onClick={isMobile ? onClose : undefined}>
           <span>About</span>
         </NavLink>

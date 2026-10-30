@@ -32,10 +32,10 @@ const StatementDetailsModal = ({
   closeDetailsModal,
   triggerExport
 }) => {
-  const room = rooms.find((r) => r.id === selectedReceipt.room_id);
-  const ownerName = owners[room?.properties?.owner_id] || 'Owner';
-  const electricityUnits = Math.max(0, selectedReceipt.new_reading - selectedReceipt.old_reading);
-  const electricityTotal = electricityUnits * selectedReceipt.electricity_rate;
+  const room = rooms.find((r) => r.id === selectedReceipt.room_id || r.tenancy_id === selectedReceipt.tenancy_id || r.id === selectedReceipt.tenancies?.room_id);
+  const ownerName = room?.properties?.owner_name || owners[room?.properties?.owner_id] || 'Owner';
+  const electricityUnits = Math.max(0, Number(selectedReceipt.new_reading || 0) - Number(selectedReceipt.old_reading || 0));
+  const electricityTotal = electricityUnits * Number(selectedReceipt.electricity_rate || 0);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto">

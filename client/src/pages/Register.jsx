@@ -15,7 +15,7 @@ const Register = () => {
     name: '',
     email: '',
     password: '',
-    role: 'Tenant'
+    role: 'tenant'
   });
   const [showPassword, setShowPassword] = useState(false);
   const [localError, setLocalError] = useState(null);
@@ -31,7 +31,7 @@ const Register = () => {
     try {
       await registerUser(formData.email, formData.password, formData.name, formData.role);
 
-      if (formData.role === 'Owner') {
+      if (formData.role === 'owner') {
         navigate('/owner-dashboard');
       } else {
         navigate('/tenant-dashboard');

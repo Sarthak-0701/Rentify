@@ -15,24 +15,24 @@ const LinkRentalRoom = ({
         <Plus className="w-4.5 h-4.5 text-app-tenant-accent" /> Link Rental Room
       </h3>
       <p className="text-xs text-app-text-muted mb-4 leading-relaxed">
-        Link up to <span className="text-app-tenant-accent font-bold">5 active rental properties</span> using the 6-digit code provided by your landlord.
+        Link up to <span className="text-app-tenant-accent font-bold">5 active rental properties</span> using the invite code provided by your landlord.
       </p>
 
       <form onSubmit={handleLinkRoom} className="flex gap-2">
         <input
           id="input-tenant-id"
           type="text"
-          maxLength="6"
-          placeholder="Enter Code (e.g. 388939)"
+          maxLength={20}
+          placeholder="e.g. RENT-A58B21"
           value={tenantCodeInput}
-          onChange={(e) => setTenantCodeInput(e.target.value.replace(/[^0-9]/g, ''))}
+          onChange={(e) => setTenantCodeInput(e.target.value.toUpperCase().trim())}
           disabled={linkLoading || linkedCodesCount >= 5}
           className="grow bg-app-bg border border-app-card-border focus:border-app-tenant-accent rounded-xl px-4 py-2 text-xs text-app-text-primary placeholder-app-text-muted outline-none transition-colors text-center font-mono tracking-widest disabled:opacity-40"
         />
         <button
           id="btn-link-room"
           type="submit"
-          disabled={linkLoading || linkedCodesCount >= 5 || tenantCodeInput.length !== 6}
+          disabled={linkLoading || linkedCodesCount >= 5 || tenantCodeInput.length < 5}
           className="bg-app-tenant-accent hover:bg-app-tenant-accent-hover disabled:bg-app-tenant-accent-glow disabled:text-app-text-muted text-white px-4 py-2 rounded-xl font-bold text-xs transition-colors cursor-pointer shadow-md flex items-center justify-center gap-1 shrink-0"
         >
           {linkLoading ? (

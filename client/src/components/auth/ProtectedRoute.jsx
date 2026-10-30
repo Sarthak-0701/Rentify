@@ -7,7 +7,7 @@ const ProtectedRoute = ({ allowedRoles }) => {
   const profile = useAuthStore((state) => state.profile);
   const loading = useAuthStore((state) => state.loading);
 
-  // 1. Still authenticating token or fetching profiles? Show a smooth placeholder.
+  // 1. Still authenticating session or fetching profile?
   if (loading) {
     return (
       <div className="min-h-screen bg-black text-gray-400 flex items-center justify-center font-sans">
@@ -24,12 +24,12 @@ const ProtectedRoute = ({ allowedRoles }) => {
     return <Navigate to="/login" replace />;
   }
 
-  // 3. User is logged in but doesn't have the explicit role permissions required
-  if (allowedRoles && (!profile || !allowedRoles.includes(profile.role))) {
+  // 3. User is logged in but doesn't have the required role
+  if (allowedRoles && (!profile || !allowedRoles.includes(profile.role?.toLowerCase()))) {
     return <Navigate to="/" replace />;
   }
 
-  // 4. Authorized safely! Render child layout/pages
+  // 4. Authorized!
   return <Outlet />;
 };
 

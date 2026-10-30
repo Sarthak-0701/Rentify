@@ -36,9 +36,9 @@ const Login = () => {
       
       const userProfile = useAuthStore.getState().profile;
       
-      if (userProfile?.role === 'Owner') {
+      if (userProfile?.role === 'owner') {
         navigate('/owner-dashboard');
-      } else if (userProfile?.role === 'Tenant') {
+      } else if (userProfile?.role === 'tenant') {
         navigate('/tenant-dashboard');
       } else {
         navigate('/');

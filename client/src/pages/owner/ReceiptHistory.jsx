@@ -60,10 +60,25 @@ const ReceiptHistory = () => {
       setError(null);
       
       const details = await rentalService.getRoomDetails(propertyId, roomId);
-      setRoomDetails(details);
-      
-      const data = await rentalService.getReceipts(propertyId, roomId);
-      setReceipts(data || []);
+      if (details) {
+        const activeTenancy = details.tenancies?.find(t => t.status?.toLowerCase() === 'active') || details.tenancies?.[0];
+        setRoomDetails({
+          ...details,
+          roomNumber: details.room_number,
+          propertyName: details.properties?.name,
+          tenantCode: activeTenancy?.invite_code,
+          tenantName: activeTenancy?.profiles?.full_name || activeTenancy?.offline_tenant_name,
+        });
+
+        const roomReceipts = (details.tenancies || [])
+          .flatMap((t) => t.receipts || [])
+          .sort((a, b) => new Date(b.billing_date) - new Date(a.billing_date));
+
+        setReceipts(roomReceipts);
+      } else {
+        setRoomDetails(null);
+        setReceipts([]);
+      }
     } catch (err) {
       console.error('Error fetching receipts/details:', err);
       setError(err.message || 'Failed to fetch receipt history.');
@@ -162,16 +177,17 @@ const ReceiptHistory = () => {
   // Open Edit Modal
   const openEditModal = (receipt) => {
     setSelectedReceipt(receipt);
+    const isPaid = receipt.status?.toLowerCase() === 'paid';
     setEditForm({
       billing_date: receipt.billing_date || '',
-      base_rent: receipt.base_rent || 0,
+      base_rent: receipt.base_rent ?? roomDetails?.base_rent ?? 0,
       old_reading: receipt.old_reading || 0,
       new_reading: receipt.new_reading || 0,
       electricity_rate: receipt.electricity_rate || 10,
       water_charges: receipt.water_charges || 0,
       trash_charges: receipt.trash_charges || 0,
       previous_balance: receipt.previous_balance || 0,
-      status: receipt.status || 'Pending'
+      status: isPaid ? 'Paid' : 'Pending'
     });
     setActiveModal('edit');
   };
@@ -298,7 +314,7 @@ const ReceiptHistory = () => {
         </div>
 
         <div className="text-app-text-muted text-[10px] md:text-right font-medium bg-app-card-from border border-app-card-border rounded-xl px-4 py-2.5 max-w-xs self-start md:self-auto">
-          ⚠️ Showing the <span className="text-app-accent font-bold">latest 3 receipts</span>. Older room receipts are pruned automatically from the database.
+          📄 All statement records for this room are permanently preserved in accounting history.
         </div>
       </div>
 
@@ -340,8 +356,9 @@ const ReceiptHistory = () => {
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-7xl w-full mx-auto">
           {receipts.map((receipt) => {
-            const electricityUnits = Math.max(0, receipt.new_reading - receipt.old_reading);
-            const electricityTotal = electricityUnits * receipt.electricity_rate;
+            const electricityUnits = Math.max(0, Number(receipt.new_reading || 0) - Number(receipt.old_reading || 0));
+            const electricityTotal = electricityUnits * Number(receipt.electricity_rate || 0);
+            const isPaid = receipt.status?.toLowerCase() === 'paid';
             
             return (
               <div 
@@ -362,11 +379,11 @@ const ReceiptHistory = () => {
                     </div>
                     <div>
                       <span className={`text-[10px] px-2.5 py-0.5 rounded-full font-bold border ${
-                        receipt.status === 'Paid' 
+                        isPaid 
                           ? 'bg-app-tenant-accent-glow text-app-tenant-accent border-app-tenant-accent-border' 
                           : 'bg-amber-500/10 text-amber-500 border border-amber-500/20'
                       }`}>
-                        {receipt.status || 'Pending'}
+                        {isPaid ? 'Paid' : 'Unpaid'}
                       </span>
                     </div>
                   </div>
@@ -377,7 +394,7 @@ const ReceiptHistory = () => {
                       <span className="text-app-text-muted flex items-center gap-1.5">
                         <Banknote className="w-3.5 h-3.5 text-app-tenant-accent/60" /> Base Rent
                       </span>
-                      <span className="font-semibold text-app-text-secondary">₹{receipt.base_rent?.toLocaleString('en-IN')}</span>
+                      <span className="font-semibold text-app-text-secondary">₹{Number(receipt.base_rent || 0).toLocaleString('en-IN')}</span>
                     </div>
 
                     <div className="flex justify-between text-xs">
@@ -385,7 +402,7 @@ const ReceiptHistory = () => {
                         <Zap className="w-3.5 h-3.5 text-amber-500/60" /> Electricity
                         <span className="text-[9px] text-app-text-muted">({electricityUnits} units)</span>
                       </span>
-                      <span className="font-semibold text-app-text-secondary">₹{electricityTotal?.toLocaleString('en-IN')}</span>
+                      <span className="font-semibold text-app-text-secondary">₹{Number(electricityTotal || 0).toLocaleString('en-IN')}</span>
                     </div>
 
                     {receipt.water_charges > 0 && (
