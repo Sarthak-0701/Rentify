@@ -1,11 +1,27 @@
-import { Router } from 'express';
+import express from 'express';
 import { requireAuth } from '../middleware/auth.js';
-import { createTenancy, claimTenancy } from '../controllers/tenancyController.js';
+import {
+  requestTenancyLink,
+  getTenantActiveRequests,
+  cancelTenantRequest,
+  getOwnerPendingRequests,
+  acceptTenancyRequest,
+  declineTenancyRequest,
+  getTenantActiveRentals,
+} from '../controllers/tenancyController.js';
 
-const router = Router();
+const router = express.Router();
 router.use(requireAuth);
 
-router.post('/', createTenancy);
-router.post('/claim', createTenancy);
+// Tenant routes
+router.post('/request-link', requestTenancyLink);
+router.get('/my-requests', getTenantActiveRequests);
+router.delete('/cancel-request/:id', cancelTenantRequest);
+router.get('/my-rentals', getTenantActiveRentals);
+
+// Owner routes
+router.get('/pending-requests', getOwnerPendingRequests);
+router.post('/:id/accept', acceptTenancyRequest);
+router.post('/:id/decline', declineTenancyRequest);
 
 export default router;

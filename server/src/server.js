@@ -11,6 +11,7 @@ import { errorHandler } from './middleware/errorHandler.js';
 import propertyRoutes from './routes/propertyRoutes.js';
 import receiptRoutes from './routes/receiptRoutes.js';
 import tenancyRoutes from './routes/tenancyRoutes.js'; 
+import roomRoutes from './routes/roomRoutes.js'; 
 
 
 const app = express();
@@ -51,6 +52,7 @@ app.get('/health' , async (req, res) => {
 });
 
 app.use('/api/properties', propertyRoutes);
+app.use('/api/rooms', roomRoutes);
 app.use('/api/receipts', receiptRoutes);
 app.use('/api/tenancies', tenancyRoutes);
 

@@ -1,4 +1,5 @@
 import { setCache, getCache, invalidateCachePattern } from '../config/redis.js';
+import { adminSupabase } from '../config/supabase.js';
 
 export const getMyProperties = async (req, res, next) => {
   try {
@@ -22,7 +23,7 @@ export const getMyProperties = async (req, res, next) => {
       console.warn('Redis read fallback to DB:', cacheErr.message);
     }
 
-    // 2. Database Fetch Scoped to Authenticated Owner
+    // 2. Database Fetch: properties -> rooms -> tenancies
     const { data, error } = await req.supabase
       .from('properties')
       .select(`
@@ -33,7 +34,14 @@ export const getMyProperties = async (req, res, next) => {
         rooms (
           id,
           room_number,
-          base_rent
+          base_rent,
+          tenancies (
+            id,
+            invite_code,
+            status,
+            tenant_id,
+            offline_tenant_name
+          )
         )
       `)
       .eq('owner_id', ownerId)
@@ -41,7 +49,61 @@ export const getMyProperties = async (req, res, next) => {
 
     if (error) throw error;
 
-    const properties = data || [];
+    // Collect all tenant_ids across active tenancies
+    const tenantIds = [];
+    (data || []).forEach((prop) => {
+      (prop.rooms || []).forEach((rm) => {
+        (rm.tenancies || []).forEach((t) => {
+          if (t.tenant_id && !tenantIds.includes(t.tenant_id)) {
+            tenantIds.push(t.tenant_id);
+          }
+        });
+      });
+    });
+
+    const tenantMap = {};
+    if (tenantIds.length > 0) {
+      const { data: profiles } = await adminSupabase
+        .from('profiles')
+        .select('id, full_name')
+        .in('id', tenantIds);
+      (profiles || []).forEach((p) => {
+        tenantMap[p.id] = p.full_name;
+      });
+    }
+
+    // Flatten tenancies so the frontend gets is_occupied, tenant_code, and tenant_name cleanly
+    const properties = (data || []).map((prop) => ({
+      ...prop,
+      rooms: (prop.rooms || []).map((rm) => {
+        // Find the active lease
+        const activeTenancy =
+          rm.tenancies?.find((t) => t.status?.toLowerCase() === 'active') || null;
+        
+        // Fallback for code display if inactive
+        const anyTenancy = activeTenancy || rm.tenancies?.[0] || null;
+
+        // Priority: Real profile full_name > Offline owner-entered name
+        const resolvedTenantName = 
+          (activeTenancy?.tenant_id ? tenantMap[activeTenancy.tenant_id] : null) || 
+          activeTenancy?.offline_tenant_name || 
+          null;
+
+        const isOccupied = Boolean(
+          activeTenancy && (activeTenancy.tenant_id || activeTenancy.offline_tenant_name)
+        );
+
+        return {
+          id: rm.id,
+          tenancy_id: activeTenancy?.id || anyTenancy?.id || null,
+          room_number: rm.room_number,
+          base_rent: rm.base_rent,
+          is_occupied: isOccupied,
+          tenant_name: resolvedTenantName,
+          tenant_code: anyTenancy?.invite_code || null,
+        };
+      }),
+    }));
 
     // 3. Populate Redis Cache for 5 minutes
     try {
@@ -65,7 +127,6 @@ export const createProperty = async (req, res, next) => {
     let name;
     let address;
 
-    // Handle edge cases where req.body arrives as a primitive or stringified JSON
     if (typeof req.body === 'string') {
       try {
         const parsed = JSON.parse(req.body);
@@ -83,7 +144,6 @@ export const createProperty = async (req, res, next) => {
       address = req.body.address;
     }
 
-    // Validation: ensure name is a non-empty string
     if (!name || typeof name !== 'string' || !name.trim()) {
       return res.status(400).json({
         success: false,
@@ -96,7 +156,6 @@ export const createProperty = async (req, res, next) => {
         ? address.trim()
         : null;
 
-    // Insert new property scoped to authenticated owner
     const { data, error } = await req.supabase
       .from('properties')
       .insert({
@@ -119,7 +178,6 @@ export const createProperty = async (req, res, next) => {
 
     if (error) throw error;
 
-    // Invalidate stale cache for this owner
     try {
       await invalidateCachePattern(`owner:properties:${req.user.id}*`);
     } catch (cacheErr) {
@@ -134,3 +192,50 @@ export const createProperty = async (req, res, next) => {
     next(err);
   }
 };
+
+export const updateProperty = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { name, address } = req.body;
+
+    const updates = {};
+    if (name) updates.name = name.trim();
+    if (address !== undefined) updates.address = address ? address.trim() : null;
+
+    const { data, error } = await req.supabase
+      .from('properties')
+      .update(updates)
+      .eq('id', id)
+      .eq('owner_id', req.user.id)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    await invalidateCachePattern(`owner:properties:${req.user.id}*`);
+
+    return res.status(200).json({ success: true, data });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const deleteProperty = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const { error } = await req.supabase
+      .from('properties')
+      .delete()
+      .eq('id', id)
+      .eq('owner_id', req.user.id);
+
+    if (error) throw error;
+
+    await invalidateCachePattern(`owner:properties:${req.user.id}*`);
+
+    return res.status(200).json({ success: true, message: 'Property deleted successfully.' });
+  } catch (err) {
+    next(err);
+  }
+}; 

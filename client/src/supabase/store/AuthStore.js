@@ -37,23 +37,37 @@ export const useAuthStore = create((set, get) => ({
 
     // 1. Initial session load
     supabase.auth.getSession().then(async ({ data: { session } }) => {
-      if (session?.user) {
-        set({ user: session.user, session });
-        await get().fetchProfile(session.user.id);
-      } else {
+      try {
+        if (session?.user) {
+          set({ user: session.user, session });
+          await get().fetchProfile(session.user.id);
+        } else {
+          set({ user: null, session: null, profile: null });
+        }
+      } catch (err) {
+        console.error('Session initialization error:', err.message);
         set({ user: null, session: null, profile: null });
+      } finally {
+        // Only mark loading false AFTER session AND profile have finished loading
+        set({ loading: false });
       }
-      set({ loading: false });
     });
 
     // 2. React to auth state changes (sign in, sign out, token refresh)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        if (session?.user) {
-          set({ user: session.user, session, loading: false });
-          await get().fetchProfile(session.user.id);
-        } else {
+        if (event === 'SIGNED_OUT') {
           set({ user: null, session: null, profile: null, loading: false });
+          return;
+        }
+
+        if (session?.user) {
+          set({ user: session.user, session });
+          // If profile is not yet loaded, fetch it before disabling loading
+          if (!get().profile || get().profile.id !== session.user.id) {
+            await get().fetchProfile(session.user.id);
+          }
+          set({ loading: false });
         }
       }
     );

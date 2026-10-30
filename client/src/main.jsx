@@ -18,6 +18,8 @@ import OwnerLayout from './layouts/OwnerLayout'
 import TenantLayout from './layouts/TenantLayout'
 import ReceiptHistory from './pages/owner/ReceiptHistory'
 import TenantRentHistory from './pages/tenant/TenantRentHistory'
+import PendingRequests from './pages/owner/PendingRequests';
+import TenantRequests from './pages/tenant/TenantRequests';
 import { PrivacyPolicy, TermsAndServices } from './pages/LegalDox'
 import { useThemeStore } from './supabase/store/ThemeStore'
 import NotFound from './pages/NotFound'
@@ -27,10 +29,14 @@ const MainApp = () => {
   const initTheme = useThemeStore((state) => state.initTheme);
 
   useEffect(() => {
-    initializeAuth();
+    const cleanupAuth = initializeAuth();
     initTheme();
-  }, [initializeAuth, initTheme]);
 
+    return () => {
+      if (typeof cleanupAuth === 'function') cleanupAuth();
+    };
+  }, [initializeAuth, initTheme]);
+  
   const router = createBrowserRouter([
     {
       path: '/',
@@ -55,7 +61,7 @@ const MainApp = () => {
     
     // NESTED STRUCTURE FOR OWNER DASHBOARD
     {
-      element: <ProtectedRoute allowedRoles={['Owner']} />,
+      element: <ProtectedRoute allowedRoles={['owner']} />,
       children: [
         {
           path: '/owner-dashboard',
@@ -64,6 +70,7 @@ const MainApp = () => {
             { path: '', element: <OwnerDashboard /> },
             { path: 'properties', element: <Properties /> },
             { path: 'calculator', element: <Calculator /> },
+            { path: 'pending-requests', element: <PendingRequests /> },
             { path: 'receipts/:propertyId/:roomId', element: <ReceiptHistory /> },
             { path: 'about' , element : <About />},
             { path: 'contact', element: <Contact />}
@@ -74,13 +81,14 @@ const MainApp = () => {
 
     // NESTED STRUCTURE FOR TENANT DASHBOARD
     {
-      element: <ProtectedRoute allowedRoles={['Tenant']} />,
+      element: <ProtectedRoute allowedRoles={['tenant']} />,
       children: [
         {
           path: '/tenant-dashboard',
           element: <TenantLayout />, 
           children: [
             { path: '', element: <TenantDashboard /> },
+            { path: 'requests', element: <TenantRequests /> },
             { path: 'rent-history', element: <TenantRentHistory /> },
             { path: 'about', element: <About /> },
             { path: 'contact', element: <Contact /> }
