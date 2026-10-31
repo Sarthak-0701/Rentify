@@ -73,7 +73,8 @@ const MainApp = () => {
             { path: 'pending-requests', element: <PendingRequests /> },
             { path: 'receipts/:propertyId/:roomId', element: <ReceiptHistory /> },
             { path: 'about' , element : <About />},
-            { path: 'contact', element: <Contact />}
+            { path: 'contact', element: <Contact />},
+            { path: '*', element: <NotFound /> }
               ]
             }
           ]
@@ -91,7 +92,8 @@ const MainApp = () => {
             { path: 'requests', element: <TenantRequests /> },
             { path: 'rent-history', element: <TenantRentHistory /> },
             { path: 'about', element: <About /> },
-            { path: 'contact', element: <Contact /> }
+            { path: 'contact', element: <Contact /> },
+            { path: '*', element: <NotFound /> }
           ]
         }
       ]
