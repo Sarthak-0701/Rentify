@@ -61,3 +61,5 @@ app.use(errorHandler);
 app.listen(PORT , () => {
     console.log(`🚀 Rentify Backend running at http://localhost:${PORT}`);
 });
+
+export default app;
