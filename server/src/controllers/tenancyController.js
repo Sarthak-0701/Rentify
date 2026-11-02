@@ -1,6 +1,6 @@
 
 import { adminSupabase } from '../config/supabase.js';
-import { invalidateCachePattern } from '../config/redis.js';
+import { invalidateCachePattern, setCache, getCache } from '../config/redis.js';
 import crypto from 'crypto';
 
 // --- 1. TENANT: REQUEST ROOM LINK (Max 3 concurrent, 6hr per-room cooldown) ---
@@ -387,6 +387,7 @@ export const acceptTenancyRequest = async (req, res, next) => {
     await invalidateCachePattern(`owner:properties:${ownerId}*`);
     if (pendingTenancy.tenant_id) {
       await invalidateCachePattern(`receipts:user:${pendingTenancy.tenant_id}*`);
+      await invalidateCachePattern(`tenant:rentals:${pendingTenancy.tenant_id}*`); // <-- ADD THIS
     }
 
     return res.status(200).json({
@@ -438,60 +439,139 @@ export const declineTenancyRequest = async (req, res, next) => {
 export const getTenantActiveRentals = async (req, res, next) => {
   try {
     const tenantId = req.user.id;
+    const cacheKey = `tenant:rentals:${tenantId}`;
 
+    // 1. Check Redis cache first (~20-25ms response time)
+    try {
+      const cached = await getCache(cacheKey);
+      if (cached) {
+        const parsed = typeof cached === 'string' ? JSON.parse(cached) : cached;
+        return res.status(200).json({ success: true, source: 'cache', data: parsed });
+      }
+    } catch (cacheErr) {
+      console.warn('Redis cache read error for tenant rentals:', cacheErr.message);
+    }
+
+    // 2. Fetch tenancies with nested room, property, and owner profile in ONE single round-trip
     const { data: tenancies, error } = await adminSupabase
       .from('tenancies')
-      .select('id, property_id, room_id, rent_amount, start_date, invite_code, status')
+      .select(`
+        id,
+        property_id,
+        room_id,
+        rent_amount,
+        start_date,
+        invite_code,
+        status,
+        rooms:room_id (
+          id,
+          room_number,
+          base_rent
+        ),
+        properties:property_id (
+          id,
+          name,
+          address,
+          owner_id,
+          profiles:owner_id (
+            id,
+            full_name
+          )
+        )
+      `)
       .eq('tenant_id', tenantId)
       .eq('status', 'active');
 
-    if (error) throw error;
+    if (error) {
+      // Fallback: If foreign key relationships aren't cached or fail join syntax,
+      // run batch-lookup queries using .in() rather than N individual queries:
+      const { data: rawTenancies, error: rawErr } = await adminSupabase
+        .from('tenancies')
+        .select('id, property_id, room_id, rent_amount, start_date, invite_code, status')
+        .eq('tenant_id', tenantId)
+        .eq('status', 'active');
 
-    if (!tenancies || tenancies.length === 0) {
-      return res.status(200).json({ success: true, data: [] });
-    }
+      if (rawErr) throw rawErr;
+      if (!rawTenancies || rawTenancies.length === 0) {
+        await setCache(cacheKey, [], 300);
+        return res.status(200).json({ success: true, data: [] });
+      }
 
-    const formatted = await Promise.all(
-      tenancies.map(async (t) => {
-        const [roomRes, propRes] = await Promise.all([
-          t.room_id
-            ? adminSupabase.from('rooms').select('id, room_number, base_rent').eq('id', t.room_id).maybeSingle()
-            : Promise.resolve({ data: null }),
-          t.property_id
-            ? adminSupabase.from('properties').select('id, name, address, owner_id').eq('id', t.property_id).maybeSingle()
-            : Promise.resolve({ data: null }),
-        ]);
+      const roomIds = rawTenancies.map((t) => t.room_id).filter(Boolean);
+      const propertyIds = rawTenancies.map((t) => t.property_id).filter(Boolean);
 
-        let ownerName = 'Landlord';
-        if (propRes.data?.owner_id) {
-          const { data: ownerProfile } = await adminSupabase
-            .from('profiles')
-            .select('full_name')
-            .eq('id', propRes.data.owner_id)
-            .maybeSingle();
-          if (ownerProfile?.full_name) {
-            ownerName = ownerProfile.full_name;
-          }
-        }
+      const [roomsRes, propertiesRes] = await Promise.all([
+        adminSupabase.from('rooms').select('id, room_number, base_rent').in('id', roomIds),
+        adminSupabase.from('properties').select('id, name, address, owner_id').in('id', propertyIds),
+      ]);
+
+      const roomMap = Object.fromEntries((roomsRes.data || []).map((r) => [r.id, r]));
+      const propMap = Object.fromEntries((propertiesRes.data || []).map((p) => [p.id, p]));
+
+      const ownerIds = (propertiesRes.data || []).map((p) => p.owner_id).filter(Boolean);
+      const { data: ownerProfiles } = await adminSupabase
+        .from('profiles')
+        .select('id, full_name')
+        .in('id', ownerIds);
+
+      const profileMap = Object.fromEntries((ownerProfiles || []).map((prof) => [prof.id, prof.full_name]));
+
+      const fallbackFormatted = rawTenancies.map((t) => {
+        const room = roomMap[t.room_id] || {};
+        const prop = propMap[t.property_id] || {};
+        const ownerName = profileMap[prop.owner_id] || 'Landlord';
 
         return {
-          id: roomRes.data?.id || t.id,
+          id: room.id || t.id,
           tenancy_id: t.id,
-          room_number: roomRes.data?.room_number || '',
-          base_rent: t.rent_amount || roomRes.data?.base_rent || 0,
+          room_number: room.room_number || '',
+          base_rent: t.rent_amount || room.base_rent || 0,
           tenant_code: t.invite_code,
           invite_code: t.invite_code,
           start_date: t.start_date,
           properties: {
-            id: propRes.data?.id,
-            name: propRes.data?.name || 'Property',
-            address: propRes.data?.address,
-            owner_id: propRes.data?.owner_id,
+            id: prop.id,
+            name: prop.name || 'Property',
+            address: prop.address,
+            owner_id: prop.owner_id,
             owner_name: ownerName,
           },
         };
-      })
-    );
+      });
+
+      await setCache(cacheKey, fallbackFormatted, 300);
+      return res.status(200).json({ success: true, data: fallbackFormatted });
+    }
+
+    if (!tenancies || tenancies.length === 0) {
+      await setCache(cacheKey, [], 300);
+      return res.status(200).json({ success: true, data: [] });
+    }
+
+    // 3. Format response from the single joined query
+    const formatted = tenancies.map((t) => ({
+      id: t.rooms?.id || t.id,
+      tenancy_id: t.id,
+      room_number: t.rooms?.room_number || '',
+      base_rent: t.rent_amount || t.rooms?.base_rent || 0,
+      tenant_code: t.invite_code,
+      invite_code: t.invite_code,
+      start_date: t.start_date,
+      properties: {
+        id: t.properties?.id,
+        name: t.properties?.name || 'Property',
+        address: t.properties?.address,
+        owner_id: t.properties?.owner_id,
+        owner_name: t.properties?.profiles?.full_name || 'Landlord',
+      },
+    }));
+
+    // 4. Save to Redis
+    try {
+      await setCache(cacheKey, formatted, 300);
+    } catch (cacheErr) {
+      console.warn('Redis cache write error for tenant rentals:', cacheErr.message);
+    }
 
     return res.status(200).json({ success: true, data: formatted });
   } catch (err) {
