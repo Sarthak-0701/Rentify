@@ -42,6 +42,32 @@ export const apiClient = async (endpoint, options = {}) => {
   return result;
 };
 
+// Inside client/src/api/client.js
+  const pendingRequests = new Map();
+
+  export const cachedGet = async (url, config = {}) => {
+    const cacheKey = url;
+
+    // If this exact request is already in-flight, return the existing promise
+    if (pendingRequests.has(cacheKey)) {
+      return pendingRequests.get(cacheKey);
+    }
+
+    const requestPromise = api.get(url, config)
+      .then((res) => {
+        // Clear after 2 seconds
+        setTimeout(() => pendingRequests.delete(cacheKey), 2000);
+        return res.data;
+      })
+      .catch((err) => {
+        pendingRequests.delete(cacheKey);
+        throw err;
+      });
+
+    pendingRequests.set(cacheKey, requestPromise);
+    return requestPromise;
+  };
+
 export const api = {
   // Properties
   getProperties: () => apiClient('/properties'),
